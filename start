@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo docker run -p 5555:5000  -e CORS_ORIGINS=['*'] registry:0.9.0

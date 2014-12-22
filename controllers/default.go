@@ -8,8 +8,7 @@ type MainController struct {
 	beego.Controller
 }
 
-func (c *MainController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplNames = "index.tpl"
+func (this *MainController) Get() {
+	this.TplNames = "index.html"
+	this.Render()
 }
