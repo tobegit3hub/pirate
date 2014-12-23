@@ -30,6 +30,7 @@ pirate.config(['$locationProvider', '$routeProvider',
 pirate.controller('IndexController', ['$scope', '$rootScope', '$routeParams', '$http', '$route',
   function($scope, $rootScope, $routeParams, $http, $route) {
 
+  // TODO: Use cookie to store the address
   $rootScope.currentRegistry = "http://96.126.127.93:5000";
 
   $scope.changeRegistry = function (server) {
@@ -40,7 +41,6 @@ pirate.controller('IndexController', ['$scope', '$rootScope', '$routeParams', '$
 
       // TODO: Remove duplicated code
       $http.get($rootScope.currentRegistry + '/v1/search').success(function(data) {
-        console.log("call init function");
         $scope.canonicalRepositories = data.results;
         $scope.tags = []; // [[14.10, 13.04], [latest], [latest]]
         $scope.images = [] // [[463ff6, d6028e], [23d93x], [o7081a]];
@@ -79,8 +79,9 @@ pirate.controller('IndexController', ['$scope', '$rootScope', '$routeParams', '$
     ]
   }
   */
+
   $http.get($rootScope.currentRegistry + '/v1/search').success(function(data) {
-    console.log("call init function");
+
     $scope.canonicalRepositories = data.results;
     $scope.tags = []; // [[14.10, 13.04], [latest], [latest]]
     $scope.images = [] // [[463ff6, d6028e], [23d93x], [o7081a]];
@@ -108,7 +109,6 @@ pirate.controller('IndexController', ['$scope', '$rootScope', '$routeParams', '$
       });
 
 		};
-
 
   }).error(function(data){alert('Fail to get data.')});
 
