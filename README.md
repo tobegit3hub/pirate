@@ -1,19 +1,28 @@
 # Pirate
 
-Private docker registry with Web UI.
+[![Build Status](https://drone.io/github.com/tobegit3hub/pirate/status.png)](https://drone.io/github.com/tobegit3hub/pirate/latest) [![GoDoc](https://godoc.org/github.com/tobegit3hub/pirate?status.svg)](https://godoc.org/github.com/tobegit3hub/pirate)
 
-## Notice
+## Introduction
 
-The latest registry:0.8.1 doesn't support CORS, so pirate should not work.
+Pirate which sounds like "private" is the website of private docker-registry.
+
+For quick start, checkout the [demo website](http://96.126.127.93:9527/).
+
+![](screenshot.png)
 
 ## Usage
 
-Run `docker run -d -e CORS_ORIGINS=[\'*\'] registry`
+```
+docker run -d -p 9527:9527 tobegit3hub/pirate
+```
 
-Or `docker run -d -e CORS_ORIGINS="'*'" registry`
+Then go to <http://127.0.0.1:9527> and add your private registry.
 
+## Notice
 
-## Related Projects
+Pirate need CORS requests for docker-registry so you should start registry like this.
 
-* <https://github.com/worksap-ate/docker-registry-ui>
-* <https://github.com/atc-/docker-registry-web>
+```
+docker run -d -p 5000:5000 -e CORS_ORIGINS="'*'" registry
+```
+
