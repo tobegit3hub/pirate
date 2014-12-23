@@ -1,6 +1,6 @@
 <div ng-controller="ImageController">
 
-  <h1>Image page</h1>
+  <h2>Image Attributes</h2>
 
   <!-- Display configuration information -->
   <table class="table table-striped table-hover">
@@ -18,7 +18,7 @@
       </tr>
       <tr>
         <td>Parent</td>
-        <td>{{data.parent}}</td>
+        <td><a ng-href="/{{data.parent}}">{{data.parent}}</a></td>
       </tr>
       <tr>
         <td>Created</td>
@@ -58,7 +58,7 @@
 
     <tbody>
       <tr ng-repeat="ancestry in ancestries | filter: search track by $index">
-        <td>{{ancestry}}</td>
+        <td><a ng-href="/{{ancestry}}">{{ancestry}}</a></td>
       </tr>
     </tbody>
   </table>
