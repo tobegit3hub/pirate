@@ -1,0 +1,66 @@
+<div ng-controller="ImageController">
+
+  <h1>Image page</h1>
+
+  <!-- Display configuration information -->
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Attribute</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>ID</td>
+        <td>{{data.id}}</td>
+      </tr>
+      <tr>
+        <td>Parent</td>
+        <td>{{data.parent}}</td>
+      </tr>
+      <tr>
+        <td>Created</td>
+        <td>{{data.created}}</td>
+      </tr>
+      <tr>
+        <td>Container</td>
+        <td>{{data.container}}</td>
+      </tr>
+      <tr>
+        <td>Docker Version</td>
+        <td>{{data.docker_version}}</td>
+      </tr>
+      <tr>
+        <td>Architecture</td>
+        <td>{{data.architecture}}</td>
+      </tr>
+      <tr>
+        <td>OS</td>
+        <td>{{data.os}}</td>
+      </tr>
+      <tr>
+        <td>Size</td>
+        <td>{{data.Size}}</td>
+      </tr>
+  </table>
+
+
+  <hr/>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Ancestry</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="ancestry in ancestries | filter: search track by $index">
+        <td>{{ancestry}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
