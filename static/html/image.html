@@ -57,7 +57,7 @@
     </thead>
 
     <tbody>
-      <tr ng-repeat="ancestry in ancestries | filter: search track by $index">
+      <tr ng-repeat="ancestry in ancestries">
         <td><a ng-href="/{{ancestry}}">{{ancestry}}</a></td>
       </tr>
     </tbody>
