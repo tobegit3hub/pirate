@@ -33,34 +33,32 @@ pirate.controller('IndexController', ['$scope', '$rootScope', '$routeParams', '$
   // TODO: Use cookie to store the address
   $rootScope.currentRegistry = "http://96.126.127.93:5000";
 
-  $scope.changeRegistry = function (server) {
-    var newRegistry = prompt("Please change registry", "http://96.126.127.93:5000");
-    if (newRegistry) {
-      $rootScope.currentRegistry = newRegistry;
-      $route.reload(); // TODO: It doesn't work
+  $scope.setRegistry = function (newRegistry) {
+    // TODO: Test if the new registry works or not by requesting /v1/_ping
 
-      // TODO: Remove duplicated code
-      $http.get($rootScope.currentRegistry + '/v1/search').success(function(data) {
-        $scope.canonicalRepositories = data.results;
-        $scope.tags = []; // [[14.10, 13.04], [latest], [latest]]
-        $scope.images = [] // [[463ff6, d6028e], [23d93x], [o7081a]];
-        for (var i=0; i < $scope.canonicalRepositories.length; i++) {
-          var namespace = $scope.canonicalRepositories[i].name.split('/')[0];
-          var repository = $scope.canonicalRepositories[i].name.split('/')[1];
-          $http.get($rootScope.currentRegistry + '/v1/repositories/' + namespace + '/' + repository + '/tags').success(function(data) {
-            var tags = [];
-            var images = [];
-            for (var key in data) {
-              tags.push(key);
-              images.push(data[key]);
-            }
-            $scope.tags.push(tags);
-            $scope.images.push(images);
-          });
-        };
-      }).error(function(data){alert('Fail to get data.')});
+    $rootScope.currentRegistry = newRegistry;
+    $route.reload(); // TODO: It doesn't work
 
-    }
+    // TODO: Remove duplicated code
+    $http.get($rootScope.currentRegistry + '/v1/search').success(function(data) {
+      $scope.canonicalRepositories = data.results;
+      $scope.tags = []; // [[14.10, 13.04], [latest], [latest]]
+      $scope.images = [] // [[463ff6, d6028e], [23d93x], [o7081a]];
+      for (var i=0; i < $scope.canonicalRepositories.length; i++) {
+        var namespace = $scope.canonicalRepositories[i].name.split('/')[0];
+        var repository = $scope.canonicalRepositories[i].name.split('/')[1];
+        $http.get($rootScope.currentRegistry + '/v1/repositories/' + namespace + '/' + repository + '/tags').success(function(data) {
+          var tags = [];
+          var images = [];
+          for (var key in data) {
+            tags.push(key);
+            images.push(data[key]);
+          }
+          $scope.tags.push(tags);
+          $scope.images.push(images);
+        });
+      };
+    }).error(function(data){alert('Fail to get data.')});
   };
 
   /*
