@@ -12,11 +12,9 @@ For quick start, checkout the [demo website](http://96.126.127.93:9527/).
 
 ## Usage
 
-```
-docker run -d -p 9527:9527 tobegit3hub/pirate
-```
-
-Then go to <http://127.0.0.1:9527> and add your private registry.
+* `docker run -d -p 9527:9527 tobegit3hub/pirate`
+* Then add private registry in <http://127.0.0.1:9527>.
+* For boot2docker users, run `boot2docker ip` to find out the IP.
 
 ## Notice
 
