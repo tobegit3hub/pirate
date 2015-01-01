@@ -1,0 +1,54 @@
+
+/* Page header */
+.page-header {
+
+}
+
+/* The left part of header */
+.page-header-left {
+  float:left;
+}
+
+/* The right part of header */
+.page-header-right {
+  float: right;
+  padding-top: 21px; /* For search form */
+}
+
+/* Add margin of the right part of header */
+.filter-button {
+  margin-right: 10px;
+}
+
+/* The size of popup images in home page */
+#popupContainers .modal-dialog {
+  width: 70%;
+}
+
+#popupImages .modal-dialog {
+  width: 70%;
+}
+
+#popupConfiguration .modal-dialog {
+  width: 70%;
+}
+
+#popupGithub .modal-dialog {
+  width: 70%;
+}
+
+/* Animation of loading icon in dockerhub page */
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}

@@ -1,11 +1,11 @@
 package main
 
 import (
-	_ "github.com/tobegit3hub/pirate/routers"
 	"github.com/astaxie/beego"
+	_ "github.com/larrycai/pirate/routers"
 )
 
+/* The main function of beego application */
 func main() {
 	beego.Run()
 }
-

@@ -1,16 +1,19 @@
-<!DOCTYPE html>
 
-<html ng-app="pirate">
+<!DOCTYPE html>
+<!-- Use angular and named it pirate application -->
+<html ng-app="seagull">
   <head>
-    <title>pirate</title>
+    <title>Pirate</title>
     <meta charset="UTF-8">
     <base href="/">
-    <!-- Favicon --> <!-- TODO: It doesn't work -->
+    <!-- Favicon -->
     <link rel="icon" href="static/img/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="static/img/favicon.ico" type="image/x-icon" />
 
     <!-- Css -->
     <link rel="stylesheet" type="text/css" href="static/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/bower_components/jquery.gritter/css/jquery.gritter.css">
+    <link rel="stylesheet" type="text/css" href="static/bower_components/animate.css/animate.min.css">
     <link rel="stylesheet" type="text/css" href="static/css/style.css">
 
     <!-- JavaScript -->
@@ -18,94 +21,59 @@
     <script src="static/bower_components/angular-route/angular-route.min.js"></script>
     <script src="static/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="static/bower_components/jquery.gritter/js/jquery.gritter.min.js"></script>
+    <script src="static/bower_components/angular-translate/angular-translate.min.js"></script>
+    <script src="static/bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="static/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js"></script>
+    <script src="static/bower_components/angular-translate-storage-local/angular-translate-storage-local.min.js"></script>
     <script src="static/js/app.js"></script>
+    <script src="static/js/controllers.js"></script>
     <script src="static/js/style.js"></script>
   </head>
 
-  <body ng-controller="IndexController">
-
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- The controller to change i18n language, refer to static/js/app.js -->
+  <body ng-controller="IndexController" class="animated fadeIn">
+    <!-- Header with a navigation bar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
+        <!-- Home page button -->
         <div class="navbar-header">
-          <a class="navbar-brand animate-nav" href="/">Pirate</a>
+          <a class="navbar-brand animate-nav" href="/">{{'pirate'|translate}}</a>
         </div>
 
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="" data-toggle="modal" data-target="#myModal">{{currentRegistry}}</a></li>
-        </ul>
-      </div>
-    </div>
+        <!-- Containers page, images page and configuration page buttons -->
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="animate-nav"><a href="/images">{{'images'|translate}}</a></li>
+            <li class="animate-nav"><a href="/configuration">{{'configuration'|translate}}</a></li>
+            <li class="animate-nav"><a href="/dockerhub">{{'dockerhub'|translate}}</a></li>
+          </ul>
 
-    <!-- Modal to change registry -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Change docker-registry</h4>
-          </div>
-          <div class="modal-body">
-            <form role="form" >
-              <div class="form-group">
-                <input class="form-control" placeholder="http://96.126.127.93:5000" ng-model="newRegistry">
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true" ng-click="setRegistry(newRegistry)">Save changes</button>
-          </div>
+          <!-- A more button to change i18n languages and email me -->
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a class="dropdown-toggle animate-nav" data-toggle="dropdown" href="">{{'more'|translate}} <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li class="animate-nav" ng-hide="isEnUs()"><a href="" ng-click="changeLanguage('en-us')">{{'en_us'|translate}}</a></li>
+                <li class="animate-nav" ng-hide="isZhCn()"><a href="" ng-click="changeLanguage('zh-cn')">{{'zh_cn'|translate}}</a></li>
+                <li class="animate-nav" ng-hide="isZhHant()"><a href="" ng-click="changeLanguage('zh-hant')">{{'zh_hant'|translate}}</a></li>
+                <li class="animate-nav" ng-hide="isDeDe()"><a href="" ng-click="changeLanguage('de-de')">{{'de_de'|translate}}</a></li>
+                <li class="animate-nav"><a href="https://github.com/tobegit3hub/seagull/issues/new" target="_top">{{'need_help'|translate}}</a></li>
+              </ul>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </div> <!-- End of navbar -->
 
     <!-- Todo: No need to use <br/> to move content below the navigation bar -->
     <br/><br/><br/><br/>
 
+    <!-- Angular views, more on static/js/app.js -->
     <div class="container">
-      <div class="row">
-
-        <!-- Left part to show all repositories -->
-        <div class="col-md-5">
-
-          <h2>All Repositories</h2>
-
-          <div>
-            <input type="text" class="form-control" placeholder="Search" ng-model="search" autofocus>
-          </div>
-
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Tags</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr ng-repeat="canonicalRepository in canonicalRepositories | filter: search track by $index" ng-init="parentIndex = $index">
-                <td>{{canonicalRepository.name}}</td>
-                <td>
-                  <span ng-repeat="tag in tags[$index]">
-                    <!-- Refer to http://stackoverflow.com/questions/26742361/angularjs-ng-repeat-track-by-index-inside-nested-loops for usage -->
-                    <a ng-href="/{{images[$parent.$index][$index]}}">{{tag}} <a>
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-        </div> <!-- End of left part -->
-
-        <!-- Right part to show image detail -->
-        <div class="col-md-7">
-          <div ng-view></div>
-        </div> <!-- End of right part -->
-
-      </div>
+      <div ng-view></div>
     </div>
 
     <!-- No footer -->
-
   </body>
 </html>

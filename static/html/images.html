@@ -1,0 +1,42 @@
+
+<!-- The images page, refer to static/js/controller -->
+<div ng-controller="ImagesController">
+
+  <span class="page-header">
+    <!-- Display images title and the JSON link -->
+    <h1 class="page-header-left">{{'images'|translate}} <a href="/dockerregistryapi/images/json" target="_blank"><img src="static/img/json-logo.png" height="32"></a></h1>
+
+    <!-- Display search form in the right -->
+    <div class="page-header-right">
+      <input type="text" class="form-control" placeholder="{{'search'|translate}}" ng-model="search" autofocus>
+    </div>
+  </span> <!-- End of page header -->
+
+  <!-- Todo: No need to use <br/> -->
+  <br/><br/><br/><br/>
+
+  <!-- Alert if we get nothing from server -->
+  <div ng-show="!images.length" class="alert alert-danger" role="alert">{{'no_docker_image'|translate}}</div>
+
+  <!-- Display all images information -->
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>{{'name'|translate}}</th>
+        <th><a href="" ng-click="predicate='RepoTags'; reverse=!reverse">{{'repotags'|translate}}</a></th>	
+		<th><a href="" ng-click="predicate='Id'; reverse=!reverse">{{'id'|translate}}</a></th>		
+        <th>{{'operation'|translate}}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="image in images | filter: search track by $index">
+        <td><a ng-href="/images/{{image.Id}}">{{image.Name}}</a></td> 
+        <td><a ng-href="/images/{{image.Id}}">{{image.Tag}}</a></td> 
+        <th><a ng-href="/images/{{image.Id}}">{{image.Id | limitTo:12}}</a></th> <!-- Shorten image id -->		
+        <td><button class="btn btn-danger" ng-click="deleteImage(image.Id)">{{'delete'|translate}}</button></td>
+      </tr>
+    </tbody>	
+  </table>
+
+</div> <!-- End of this angular page -->

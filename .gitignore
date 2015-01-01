@@ -1,4 +1,4 @@
-# Temporary files
+[2~# Temporary files
 ~
 
 # Beego binary
@@ -28,3 +28,4 @@ _testmain.go
 *.exe
 *.test
 *.prof
+*.bak

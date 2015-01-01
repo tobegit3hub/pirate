@@ -1,0 +1,123 @@
+
+<!-- The configuration page -->
+<div ng-controller="ConfigurationController">
+
+  <span class="page-header">
+    <h1 class="page-header-title">{{'configuration'|translate}} <a href="/dockerapi/info" target="_blank"><img src="static/img/json-logo.png" height="32"></a></h1>
+  </span> <!-- End of page header -->
+
+  <!-- Alert if we get nothing from server -->
+  <div ng-show="!version || !info" class="alert alert-danger" role="alert">{{'no_data_of_version_or_info'|translate}}</div>
+
+  <!-- Display configuration information -->
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>{{'attribute'|translate}}</th>
+        <th>{{'value'|translate}}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>{{'goversion'|translate}}</td>
+        <td>{{version.GoVersion}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'version'|translate}}</td>
+        <td>{{version.Version}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'gitcommit'|translate}}</td>
+        <td>{{version.GitCommit}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'apiversion'|translate}}</td>
+        <td>{{version.ApiVersion}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'containers'|translate}}</td>
+        <td>{{info.Containers}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'images'|translate}}</td>
+        <td>{{info.Images}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'driver'|translate}}</td>
+        <td>{{info.Driver}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'executiondriver'|translate}}</td>
+        <td>{{info.ExecutionDriver}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'kernelversion'|translate}}</td>
+        <td>{{info.KernelVersion}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'debug'|translate}}</td>
+        <td>{{info.Debug}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'nfd'|translate}}</td>
+        <td>{{info.NFd}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'ngoroutines'|translate}}</td>
+        <td>{{info.NGoroutines}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'neventslistener'|translate}}</td>
+        <td>{{info.NEventsListener}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'initpath'|translate}}</td>
+        <td>{{info.InitPath}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'initsha1'|translate}}</td>
+        <td>{{info.InitSha1}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'indexserveraddress'|translate}}</td>
+        <td>{{info.IndexServerAddress}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'memorylimit'|translate}}</td>
+        <td>{{info.MemoryLimit | boolean_to_string}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'swaplimit'|translate}}</td>
+        <td>{{info.SwapLimit | boolean_to_string}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'ipv4forwarding'|translate}}</td>
+        <td>{{info.IPv4Forwarding | boolean_to_string}}</td>
+      </tr>
+
+      <tr>
+        <td>{{'sockets'|translate}}</td>
+        <td>{{info.Sockets | array_to_string}}</td>
+      </tr>
+  </table>
+
+</div> <!-- End of this angular page -->
