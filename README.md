@@ -12,16 +12,10 @@ For quick start, checkout the [demo website](http://96.126.127.93:9527/).
 
 ## Usage
 
-* `docker run -d -p 9527:9527 tobegit3hub/pirate`
-* Then add private registry in <http://127.0.0.1:9527>.
-* For boot2docker users, run `boot2docker ip` to find out the IP.
+Please run like below 
 
-## Usage
-
-* Run 
-
-docker run -d -p 5000:5000 --name registry registry
-docker run -d -p 9527:9527 -v /var/run/docker.sock:/var/run/docker.sock --link registry:registry tobegit3hub/pirate
+	docker run -d -p 5000:5000 --name registry registry
+	docker run -d -p 9527:9527 -v /var/run/docker.sock:/var/run/docker.sock --link registry:registry tobegit3hub/pirate
 
 * Then monitor your docker daemon in <http://127.0.0.1:9527>.
 * For boot2docker users, please run `boot2docker ip` to find out the real IP.
@@ -30,12 +24,12 @@ docker run -d -p 9527:9527 -v /var/run/docker.sock:/var/run/docker.sock --link r
 
 Fill images into registry to show how it works
 
-docker tag hello-world localhost:5000/hello-world
-docker tag hello-world localhost:5000/hello-world:1.0
-docker tag hello-world localhost:5000/larrycai/hello-world
-docker push localhost:5000/hello-world
-docker push localhost:5000/hello-world:1.0
-docker push localhost:5000/larrycai/hello-world
+	docker tag hello-world localhost:5000/hello-world
+	docker tag hello-world localhost:5000/hello-world:1.0
+	docker tag hello-world localhost:5000/larrycai/hello-world
+	docker push localhost:5000/hello-world
+	docker push localhost:5000/hello-world:1.0
+	docker push localhost:5000/larrycai/hello-world
 
 ## Screenshot
 
