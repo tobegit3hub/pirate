@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/larrycai/pirate",
+	"ImportPath": "github.com/tobeg3oogle/pirate",
 	"GoVersion": "go1.1.2",
 	"Deps": [
 		{

@@ -11,12 +11,12 @@ ENV REFREST_AT 20141230
 # Install dependency
 RUN go get github.com/astaxie/beego
 RUN go get github.com/beego/bee
-# RUN go get github.com/larrycai/pirate
+# RUN go get github.com/tobeg3oogle/pirate
 
-Add . /go/src/github.com/larrycai/pirate/
+Add . /go/src/github.com/tobeg3oogle/pirate/
 
 # Go to the folder of seagull
-WORKDIR /go/src/github.com/larrycai/pirate/
+WORKDIR /go/src/github.com/tobeg3oogle/pirate/
 
 # Build the project
 RUN go build pirate.go
