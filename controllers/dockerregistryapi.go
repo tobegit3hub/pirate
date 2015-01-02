@@ -9,7 +9,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-
+    "os"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -21,10 +21,17 @@ import (
 
 /* Give address and method to request docker unix socket */
 func RequestRegistry(address, method string) string {
-	REGISTRY_URL := "http://registry:5000/v1"
+	REGISTRY_URL := "registry:5000"
+	if os.Getenv("REGISTRY_URL") != "" {
+	   REGISTRY_URL = os.Getenv("REGISTRY_URL")
+	} else {
+	   // set varible to be used in configuration
+	   os.Setenv("REGISTRY_URL", REGISTRY_URL)
+	}
+    // fmt.Println(os.Environ())
+	registry_url := "http://" + REGISTRY_URL + "/v1" + address
+    //fmt.Println(registry_url)
 
-	registry_url := REGISTRY_URL + address
-	
 	reader := strings.NewReader("")
 
 	request, err := http.NewRequest(method, registry_url, reader)
@@ -164,6 +171,7 @@ type version struct {
 
 type configuration struct {
     KernelVersion string
+	RegistryServer string
     Os string
     Version string
 	ApiVersion string
@@ -206,6 +214,9 @@ func (this *DockerregistryapiController) GetVersion() {
 	config.GitCommit     = pingResult.Host[1]
 	config.KernelVersion = pingResult.Host[2]	
 	config.Version       = m["docker_registry.server"].(string)
+	
+	// add registry url
+	config.RegistryServer= os.Getenv("REGISTRY_URL")
 
     configJson,_ := json.Marshal(config)
 //    fmt.Println("config:",string(configJson))
