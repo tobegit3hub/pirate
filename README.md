@@ -15,7 +15,7 @@ For quick start, checkout the [demo website](http://96.126.127.93:9527/).
 Please run like below 
 
 	docker run -d -p 5000:5000 --name registry registry
-	docker run -d -p 9527:9527 -v /var/run/docker.sock:/var/run/docker.sock --link registry:registry tobegit3hub/pirate
+	docker run -d -p 9527:9527 --link registry:registry tobegit3hub/pirate
 
 * Then monitor your docker daemon in <http://127.0.0.1:9527>.
 * For boot2docker users, please run `boot2docker ip` to find out the real IP.

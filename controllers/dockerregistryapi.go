@@ -162,24 +162,55 @@ type version struct {
 	Version string
 }
 
-//{"ApiVersion":"1.16","Arch":"amd64","GitCommit":"5bc2ff8",
-// "GoVersion":"go1.3.3","KernelVersion":"3.16.7-tinycore64","Os":"linux","Version":"0.9.0"}
-/* "host": [
-        "Linux",
-        "661a9d2360c3",
-        "3.16.7-tinycore64",
-        "#1 SMP Tue Dec 16 23:03:39 UTC 2014",
-        "x86_64",
-        "x86_64"
-    ],
-*/	
-/* ToDo: Wrap docker remote API to get version info */
+type configuration struct {
+    KernelVersion string
+    Os string
+    Version string
+	ApiVersion string
+	GoVersion string
+	Arch string
+	GitCommit string
+	Host string
+	Launch string
+}
+
+type ping struct {
+    Host []string
+    Launch []string
+	Versions interface{}
+}
+
+/* Wrap docker registry API to get version info */
 func (this *DockerregistryapiController) GetVersion() {
-//	address := "/_ping"
-//	result := RequestRegistry(address, "GET")
-	result := `{"ApiVersion":"1.16","Arch":"amd64","GitCommit":"5bc2ff8",
-	"GoVersion":"go1.3.3","KernelVersion":"3.16.7-tinycore64","Os":"linux","Version":"0.9.0"}`
-	this.Ctx.WriteString(result)
+	address := "/_ping"
+	result := RequestRegistry(address, "GET")
+	
+	// unmarshall the docker ping result to internal data
+    var pingResult ping
+    json.Unmarshal([]byte(result),&pingResult)
+	m := pingResult.Versions.(map[string]interface{})
+
+/*	
+    fmt.Println(pingResult)
+    fmt.Println("Host:",pingResult.Host)
+	fmt.Println("Host:",pingResult.Host[2])
+	fmt.Println("Launch:",pingResult.Launch)
+	fmt.Println("Versions:",pingResult.Versions)
+*/
+    // fill the internal data structure
+	var config configuration
+//	config.Host          = pingResult.Host
+//	config.Launch        = pingResult.Launch
+//	config.Versions      = pingResult.Versions
+	config.Os            = pingResult.Host[0]
+	config.GitCommit     = pingResult.Host[1]
+	config.KernelVersion = pingResult.Host[2]	
+	config.Version       = m["docker_registry.server"].(string)
+
+    configJson,_ := json.Marshal(config)
+//    fmt.Println("config:",string(configJson))
+	
+	this.Ctx.WriteString(string(configJson))
 }
 
 /* Wrap docker remote API to get docker info */
