@@ -1,7 +1,7 @@
 package test
 
 import (
-	_ "github.com/tobegit3hub/seagull/routers"
+	_ "github.com/tobeg3oogle/pirate/routers"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
