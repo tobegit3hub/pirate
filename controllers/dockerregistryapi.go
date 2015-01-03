@@ -63,7 +63,7 @@ func RequestRegistry(address, method string) string {
 	*/
 
 	defer response.Body.Close()
-	fmt.Println(string(body))
+	fmt.Println("http result body:",string(body))
 	return string(body)
 }
 
@@ -153,8 +153,10 @@ func (this *DockerregistryapiController) GetUserImage() {
 
 /* Wrap docker remote API to delete image */
 func (this *DockerregistryapiController) DeleteImage() {
-	id := this.GetString(":id")
-	address := "/images/" + id
+	name := this.GetString(":name")
+	repo := this.GetString(":repo")
+	tag := this.GetString(":tag")
+	address := "/repositories/" + name + "/" + repo + "/tags/" + tag
 	result := RequestRegistry(address, "DELETE")
 	this.Ctx.WriteString(result)
 }
