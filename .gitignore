@@ -1,5 +1,6 @@
 [2~# Temporary files
 ~
+.idea
 
 # Beego binary
 pirate

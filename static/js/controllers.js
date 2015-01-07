@@ -70,7 +70,10 @@ seagullControllers.controller('ImagesController', ['$scope', '$routeParams', '$h
   });
 
   /* Request beego API server to delete image */
-  $scope.deleteImage = function(name,tag) {
+  $scope.deleteImage = function(image) {
+    var name = image.Name;
+    var tag = image.Tag;
+    var id = image.Id;
     $http({
       method: 'DELETE',
       url: '/dockerregistryapi/repositories/' + name + '/tags/' + tag,
