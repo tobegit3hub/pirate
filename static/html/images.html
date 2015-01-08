@@ -34,7 +34,7 @@
         <td><a ng-href="/images/{{image.Id}}">{{image.Name}}</a></td> 
         <td><a ng-href="/images/{{image.Id}}">{{image.Tag}}</a></td> 
         <th><a ng-href="/images/{{image.Id}}">{{image.Id | limitTo:12}}</a></th> <!-- Shorten image id -->		
-        <td><button class="btn btn-danger" ng-click="deleteImage(image.Name,image.Tag)">{{'delete'|translate}}</button></td>
+        <td><button class="btn btn-danger" ng-click="deleteImage(image)">{{'delete'|translate}}</button></td>
       </tr>
     </tbody>	
   </table>
