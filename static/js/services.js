@@ -64,25 +64,6 @@ seagullServices.service('dockerService', ['$http', '$q',
             var tag = image.Tag;
             var uri = baseURL + 'repositories/' + name + '/tags/' + tag;
             return deleteDataForURI(uri);
-            /*
-
-            var deferred = $q.defer();
-            $http({
-                method: 'DELETE',
-                url:
-                data: '',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            }).success(function () {
-                if (status == 200) {
-                    deferred.resolve(data);
-                } else {
-                    deferred.reject(status);
-                }
-            }).error(function (reason) {
-                deferred.reject(reason);
-            });
-            return deferred.promise;
-            */
         }
 
         return {
