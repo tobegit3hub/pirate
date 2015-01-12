@@ -159,7 +159,7 @@ func (this *DockerregistryapiController) DeleteImage() {
 	address := "/repositories/" + name + "/" + repo + "/tags/" + tag
 	var result string
 	if  os.Getenv("PIRATE_MODE") == "readonly" {
-	    fmt.Println("readonly mode, delete is now allowed")
+	    fmt.Println("readonly mode, delete is not allowed")
 	    result = "" 
 	} else {
 		result = RequestRegistry(address, "DELETE")
@@ -225,8 +225,8 @@ func (this *DockerregistryapiController) GetVersion() {
 	config.Version       = m["docker_registry.server"].(string)
 	
 	// add pirate environment
-	config.RegistryServer= os.Getenv("REGISTRY_URL")
-	config.PirateMode= os.Getenv("PIRATE_MODE")
+	config.RegistryServer = os.Getenv("REGISTRY_URL")
+	config.PirateMode = os.Getenv("PIRATE_MODE")
 
     configJson,_ := json.Marshal(config)
 //    fmt.Println("config:",string(configJson))

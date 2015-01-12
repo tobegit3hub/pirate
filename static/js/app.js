@@ -5,6 +5,7 @@
 var seagull = angular.module('seagull', [
   'ngRoute',
   'seagullControllers',
+  'seagullServices',
   'ngCookies', // To save perference of i18n language
   'pascalprecht.translate'
 ]);
