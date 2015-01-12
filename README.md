@@ -30,13 +30,13 @@ Please run like below
 
 So far follow configurations are supported, you can pass via like `-e PIRATE_MODE=readonly` for `docker run` command.
 
- * PIRATE_MODE=readonly          : default is DELETE, disable DELETE operation for each image, good for anonymous access
- * REGISTRY_URL=<registry url>   : default is `registry:5000`, don't put `http` in front.
+ * `PIRATE_MODE=readonly|DELETE`   : default is `DELETE`, disable DELETE operation for each image, good for anonymous access
+ * `REGISTRY_URL=<registry url>`   : default is `registry:5000`, don't put `http` in front.
  
 Planned to have
  
- * PIRATE_URL_ALIAS  : add extra url, see #13
- * PIRATE_DOC_REF    : give wiki link as reference, see #5
+ * `PIRATE_URL_ALIAS`  : add extra url, see #13
+ * `PIRATE_DOC_REF`    : give wiki link as reference, see #5
 
 ## Testing 
 
