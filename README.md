@@ -52,12 +52,6 @@ Push images into registry
 	docker push localhost:5000/hello-world:1.0
 	docker push localhost:5000/larrycai/hello-world
 
-## Screenshot
-
-![](https://raw.github.com/tobegit3hub/pirate/master/screenshot.png)
-![](https://raw.github.com/tobegit3hub/pirate/master/static/img/images-page.png)
-![](https://raw.github.com/tobegit3hub/pirate/master/static/img/image-page.png)
-
 ## Get Involved
 
 Pirate is implemented in Go and JavaScript with tools like Beego, AngularJS, Bootstrap, Bower, JQuery and Docker. You can fork the repository and send pull-request as you want.
