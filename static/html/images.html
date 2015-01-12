@@ -25,7 +25,7 @@
         <th>{{'name'|translate}}</th>
         <th><a href="" ng-click="predicate='RepoTags'; reverse=!reverse">{{'repotags'|translate}}</a></th>	
 		<th><a href="" ng-click="predicate='Id'; reverse=!reverse">{{'id'|translate}}</a></th>		
-        <th>{{'operation'|translate}}</th>
+        <th ng-hide="isReadonly()">{{'operation'|translate}}</th>
       </tr>
     </thead>
 
@@ -34,7 +34,7 @@
         <td><a ng-href="/images/{{image.Id}}">{{image.Name}}</a></td> 
         <td><a ng-href="/images/{{image.Id}}">{{image.Tag}}</a></td> 
         <th><a ng-href="/images/{{image.Id}}">{{image.Id | limitTo:12}}</a></th> <!-- Shorten image id -->		
-        <td><button class="btn btn-danger" ng-click="deleteImage(image)">{{'delete'|translate}}</button></td>
+        <td ng-hide="isReadonly()"><button class="btn btn-danger" ng-click="deleteImage(image)">{{'delete'|translate}}</button></td>
       </tr>
     </tbody>	
   </table>
