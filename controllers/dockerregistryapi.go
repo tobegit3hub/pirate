@@ -227,6 +227,7 @@ func (this *DockerregistryapiController) GetVersion() {
 	// add pirate environment
 	config.RegistryServer = os.Getenv("REGISTRY_URL")
 	config.PirateMode = os.Getenv("PIRATE_MODE")
+	config.ServerUrl = os.Getenv("SERVER_URL")
 
     configJson,_ := json.Marshal(config)
 //    fmt.Println("config:",string(configJson))
