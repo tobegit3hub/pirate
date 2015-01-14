@@ -229,7 +229,7 @@ func (this *DockerregistryapiController) GetVersion() {
 	config.RegistryServer = os.Getenv("REGISTRY_URL")
 	config.PirateMode = os.Getenv("PIRATE_MODE")
 	config.PirateUrlAlias = os.Getenv("PIRATE_URL_ALIAS")
-	if(config.PirateUrlAlias == nil){
+	if(config.PirateUrlAlias == ""){
 		config.PirateUrlAlias = config.RegistryServer
 	}
 
