@@ -181,6 +181,7 @@ type configuration struct {
     KernelVersion string
 	RegistryServer string
 	PirateMode string
+	PirateUrlAlias string
     Os string
     Version string
 	ApiVersion string
@@ -227,9 +228,13 @@ func (this *DockerregistryapiController) GetVersion() {
 	// add pirate environment
 	config.RegistryServer = os.Getenv("REGISTRY_URL")
 	config.PirateMode = os.Getenv("PIRATE_MODE")
+	config.PirateUrlAlias = os.Getenv("PIRATE_URL_ALIAS")
+	if(config.PirateUrlAlias == ""){
+		config.PirateUrlAlias = config.RegistryServer
+	}
 
     configJson,_ := json.Marshal(config)
-//    fmt.Println("config:",string(configJson))
+    fmt.Println("config:",string(configJson))
 	
 	this.Ctx.WriteString(string(configJson))
 }
