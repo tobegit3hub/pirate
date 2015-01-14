@@ -23,20 +23,18 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Pull Image</th>
         <th><a href="" ng-click="predicate='RepoTags'; reverse=!reverse">RepoTags</a></th>
 		<th><a href="" ng-click="predicate='Id'; reverse=!reverse">Id</a></th>
-        <th ng-hide="isReadonly()">Operation</th>
+        <th>Operation</th>
       </tr>
     </thead>
 
     <tbody>
       <tr ng-repeat="image in images | filter: search track by $index">
         <td><a ng-href="/images/{{image.Id}}">{{image.Name}}</a></td>
-        <td><button class="glyphicon glyphicon-download" ng-click="pullImage(image)"></button></td>
         <td><a ng-href="/images/{{image.Id}}">{{image.Tag}}</a></td> 
         <th><a ng-href="/images/{{image.Id}}">{{image.Id | limitTo:12}}</a></th> <!-- Shorten image id -->		
-        <td ng-hide="isReadonly()"><button class="btn btn-danger" ng-click="deleteImage(image)">Delete</button></td>
+        <td><button class="btn btn-primary" ng-click="pullImage(image)">Pull Image</button>&nbsp;<button ng-hide="isReadonly()" class="btn btn-danger" ng-click="deleteImage(image)">Delete</button></td>
       </tr>
     </tbody>	
   </table>
