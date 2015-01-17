@@ -4,10 +4,10 @@
 
   <span class="page-header">
     <!-- Display images title and the JSON link -->
-    <h1 class="page-header-left">{{'dockerhub'|translate}} <a href="/dockerapi/images/search?term=seagull" target="_blank"><img src="static/img/json-logo.png" height="32"></a></h1>
+    <h1 class="page-header-left">DockerHub <a href="/dockerapi/images/search?term=seagull" target="_blank"><img src="static/img/json-logo.png" height="32"></a></h1>
 
     <!-- Display search form in the right -->
-    <span class="page-header-right"><button ng-click="getSearchImages(term)" class="btn btn-info" type="submit"><span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span><span ng-show="!isSearching">{{'search'|translate}}</span></button></span>
+    <span class="page-header-right"><button ng-click="getSearchImages(term)" class="btn btn-info" type="submit"><span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span><span ng-show="!isSearching">Search</span></button></span>
     <div class="page-header-right input-group">
       <input type="text" class="form-control" placeholder="pirate" ng-model="term" autofocus>
     </div>
@@ -18,17 +18,17 @@
   <br/><br/><br/><br/>
 
   <!-- Alert if we get nothing from server -->
-  <div ng-show="!images.length" class="alert alert-danger" role="alert">{{'search_no_docker_image'|translate}}</div>
+  <div ng-show="!images.length" class="alert alert-danger" role="alert">Search no docker image</div>
 
   <!-- Display all images information -->
   <table class="table table-striped table-hover">
     <thead>
       <tr>
-        <th>{{'name'|translate}}</th>
-        <th>{{'description'|translate}}</th>
-        <th>{{'star_count'|translate}}</th>
-        <th>{{'is_official'|translate}}</th>
-        <th>{{'is_automated'|translate}}</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>StarCount</th>
+        <th>IsOfficial</th>
+        <th>IsAutomated</th>
       </tr>
     </thead>
 
