@@ -13,11 +13,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	
-//	"strconv"
+	"errors"
 	"strings"
 	"encoding/json"
 )
+
+const README_MD_FILE = "/app/README.md"
+const REGISTRY_PATH = "/registry"
 
 /* Give address and method to request docker unix socket */
 func RequestRegistry(address, method string) string {
@@ -94,6 +96,16 @@ func getTags(name string) string {
 	fmt.Println(address)
 	result := RequestRegistry(address, "GET")
     return result
+}
+
+func getReadme(id string)(string,error) {
+    readmefile := REGISTRY_PATH + "/" + id + "/" + README_MD_FILE 
+    dat, err := ioutil.ReadFile(readmefile)
+    if err!=nil {
+        fmt.Printf("can't find %s\n",readmefile) 
+        return "", errors.New("can't find the file")
+    } 
+    return string(dat),nil
 }
 
 /* Wrap docker remote API to get images */
@@ -244,5 +256,40 @@ func (this *DockerregistryapiController) GetInfo() {
 	address := "/_ping"
 	result := RequestRegistry(address, "GET")
 	this.Ctx.WriteString(result)
+}
+
+type imageInfo struct {
+    Comment string
+}
+/* Wrap docker remote API to get data of image */
+func (this *DockerregistryapiController) GetImageInfo() {
+	id := this.GetString(":id")
+    readme := ""
+    for i:=0;; {      // i is used to control the depth of the layer
+        fmt.Println("Check id:" + id)
+        contents, err := getReadme(id)
+        if err == nil || i > 5 {
+            readme = contents
+            break  // found README
+        }
+        i = i+1 
+        address := "/images/" + id + "/json"
+        result := RequestRegistry(address, "GET")
+        i := strings.Index(result,`"parent":`)
+        if i==-1 {
+            break // to the end
+        }
+        id = result[i+10:i+74]
+        // fmt.Println(result)
+    }
+    if readme == "" {
+        readme = "not found, will set to default information"
+    }
+    var info imageInfo
+    info.Comment = readme
+    all,_ := json.Marshal(info)
+    fmt.Println(string(all))
+	
+	this.Ctx.WriteString(string(all))
 }
 
