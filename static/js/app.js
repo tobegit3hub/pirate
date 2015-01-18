@@ -7,7 +7,8 @@ var seagull = angular.module('seagull', [
   'seagullControllers',
   'seagullServices',
   'ngCookies',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'yaru22.md'
 ]);
 
 /* Configurate application like router and others*/
