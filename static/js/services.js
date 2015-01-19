@@ -1,4 +1,3 @@
-/* All angular application controllers */
 var seagullServices = angular.module('seagullServices', []);
 
 /* Docker service requests beego API server */
@@ -55,6 +54,10 @@ seagullServices.service('dockerService', ['$http', '$q',
             return getDataForURI(getImageBaseURI + user + "/" + repo + '/json');
         }
 
+        function getImageInfo(id) {
+            return getDataForURI(getImageBaseURI + id + '/info/json');
+        }
+
         function searchImages(term) {
             return getDataForURI(searchImagesURI, "term=" + term);
         }
@@ -72,6 +75,7 @@ seagullServices.service('dockerService', ['$http', '$q',
             getImages: getImages,
             getImageById: getImageById,
             getImageByUserAndRepo: getImageByUserAndRepo,
+            getImageInfo: getImageInfo,
             deleteImage: deleteImage,
             searchImages: searchImages
         }

@@ -32,7 +32,7 @@ seagullControllers.controller('HomeController', ['$scope', '$routeParams', 'dock
             $scope.version = version;
             $scope.Os = version.Os;
             $scope.KernelVersion = version.KernelVersion;
-            $scope.GoVersion =version.GoVersion;
+            $scope.GoVersion = version.GoVersion;
             $scope.Version = version.Version;
         });
 
@@ -56,9 +56,9 @@ seagullControllers.controller('ImagesController', ['$scope', '$routeParams', '$h
         });
 
         $scope.pullImage = function (image) {
-            if($scope.version){
-                $scope.pullUrl =  $scope.version.PirateUrlAlias + "/" + image.Name + "/" + image.Tag;
-                var modalInstance  = $modal.open({
+            if ($scope.version) {
+                $scope.pullUrl = $scope.version.PirateUrlAlias + "/" + image.Name + "/" + image.Tag;
+                var modalInstance = $modal.open({
                     templateUrl: '/static/html/modal.html',
                     controller: 'ModalController',
                     resolve: {
@@ -68,7 +68,9 @@ seagullControllers.controller('ImagesController', ['$scope', '$routeParams', '$h
                     }
                 });
 
-                modalInstance.result.then(function (){}, function(){});
+                modalInstance.result.then(function () {
+                }, function () {
+                });
             }
         };
 
@@ -84,8 +86,8 @@ seagullControllers.controller('ImagesController', ['$scope', '$routeParams', '$h
             });
         };
 
-        $scope.isReadonly = function() {
-            if($scope.version && $scope.version.PirateMode !== 'readonly'){
+        $scope.isReadonly = function () {
+            if ($scope.version && $scope.version.PirateMode !== 'readonly') {
                 return false;
             }
             return true;
@@ -99,9 +101,9 @@ seagullControllers.controller('ModalController', [
     '$scope',
     '$modalInstance',
     'pullUrl',
-    function($scope, $modalInstance, pullUrl){
+    function ($scope, $modalInstance, pullUrl) {
         $scope.pullCmd = "docker pull " + pullUrl;
-        $scope.close = function(){
+        $scope.close = function () {
             $modalInstance.close();
         }
     }]);
@@ -111,13 +113,22 @@ seagullControllers.controller('ModalController', [
  */
 seagullControllers.controller('ImageController', ['$scope', '$routeParams', 'dockerService',
     function ($scope, $routeParams, dockerService) {
+
+        function getImageInfo(image) {
+            dockerService.getImageInfo(image.id).then(function (info) {
+                $scope.mdInfo = info.Comment;
+            });
+        }
+
         if (typeof $routeParams.id === 'undefined' || $routeParams.id == null) {
             dockerService.getImageByUserAndRepo($routeParams.user, $routeParams.repo).then(function (image) {
                 $scope.image = image;
+                getImageInfo(image);
             });
         } else {
             dockerService.getImageById($routeParams.id).then(function (image) {
                 $scope.image = image;
+                getImageInfo(image);
             });
         }
 
