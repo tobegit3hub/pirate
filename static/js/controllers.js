@@ -57,7 +57,7 @@ seagullControllers.controller('ImagesController', ['$scope', '$routeParams', '$h
 
         $scope.pullImage = function (image) {
             if ($scope.version) {
-                $scope.pullUrl = $scope.version.PirateUrlAlias + "/" + image.Name + "/" + image.Tag;
+                $scope.pullUrl = $scope.version.PirateUrlAlias + "/" + image.Name + ":" + image.Tag;
                 var modalInstance = $modal.open({
                     templateUrl: '/static/html/modal.html',
                     controller: 'ModalController',
