@@ -65,7 +65,7 @@ func RequestRegistry(address, method string) string {
 	*/
 
 	defer response.Body.Close()
-	fmt.Println("http result body:",string(body))
+	// fmt.Println("http result body:",string(body))
 	return string(body)
 }
 
@@ -246,7 +246,7 @@ func (this *DockerregistryapiController) GetVersion() {
 	}
 
     configJson,_ := json.Marshal(config)
-    fmt.Println("config:",string(configJson))
+    // fmt.Println("config:",string(configJson))
 	
 	this.Ctx.WriteString(string(configJson))
 }
@@ -259,12 +259,33 @@ func (this *DockerregistryapiController) GetInfo() {
 }
 
 type imageInfo struct {
-    Comment string
+    Id string
+	ParentId string
+    Name string
+	Tag string
+	Readme string
+	Layers string
+	BuildInfo string
+	Dockerfile string
+	Author string
+	Architecture string
+	Created string
+	Comment string
+	DockerVersion string
+	Os string
+	Size string
 }
+
 /* Wrap docker remote API to get data of image */
 func (this *DockerregistryapiController) GetImageInfo() {
-	id := this.GetString(":id")
+	var id, name, tag string
+	this.Ctx.Input.Bind(&id, "id")
+	this.Ctx.Input.Bind(&name, "name")
+	this.Ctx.Input.Bind(&tag, "tag")
+	fmt.Printf("id:%s,name:%s,tag:%s", id, name, tag)
+	
     readme := ""
+	var parentId []string
     for i:=0;; {      // i is used to control the depth of the layer
         fmt.Println("Check id:" + id)
         contents, err := getReadme(id)
@@ -279,16 +300,30 @@ func (this *DockerregistryapiController) GetImageInfo() {
         if i==-1 {
             break // to the end
         }
-        id = result[i+10:i+74]
-        // fmt.Println(result)
+        id = result[i+10:i+74] // TODO: hacked solution to get parent
+		parentId = append(parentId, id)
+        //fmt.Println(parentId)
     }
     if readme == "" {
         readme = "not found, will set to default information"
     }
     var info imageInfo
-    info.Comment = readme
+    info.Readme = readme
+	info.Id = id
+	info.Name = name
+	info.Tag = tag
+	info.ParentId = parentId[0]
+	info.BuildInfo ="this is build log"
+	info.Dockerfile = "this is Dockerfile"
+	info.Architecture = "amd64"	
+	info.Created="2014-12-01"
+	info.Author = "Larry Cai larry.caiyu@gmail.com"
+	info.Os = "linux"
+	info.Comment = ""
+	info.DockerVersion = "1.2.0"
+	info.Size = "0"
     all,_ := json.Marshal(info)
-    fmt.Println(string(all))
+    // fmt.Println(string(all))
 	
 	this.Ctx.WriteString(string(all))
 }

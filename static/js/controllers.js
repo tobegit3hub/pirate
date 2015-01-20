@@ -113,25 +113,9 @@ seagullControllers.controller('ModalController', [
  */
 seagullControllers.controller('ImageController', ['$scope', '$routeParams', 'dockerService',
     function ($scope, $routeParams, dockerService) {
-
-        function getImageInfo(image) {
-            dockerService.getImageInfo(image.id).then(function (info) {
-                $scope.mdInfo = info.Comment;
-            });
-        }
-
-        if (typeof $routeParams.id === 'undefined' || $routeParams.id == null) {
-            dockerService.getImageByUserAndRepo($routeParams.user, $routeParams.repo).then(function (image) {
-                $scope.image = image;
-                getImageInfo(image);
-            });
-        } else {
-            dockerService.getImageById($routeParams.id).then(function (image) {
-                $scope.image = image;
-                getImageInfo(image);
-            });
-        }
-
+		dockerService.getImageInfo($routeParams.id,$routeParams.name,$routeParams.tag).then(function (image) {
+			$scope.image = image;
+		});
     }]);
 
 /* Contaienrs controller requests beego API server to get configuration */

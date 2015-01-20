@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2 ng-show="image">Image {{imageName}} {{imageTag}} <a ng-href="/dockerregistryapi/images/{{image.id}}/json"
+                    <h2 ng-show="image">{{image.Name}}:{{image.Tag}} <a ng-href="/dockerregistryapi/images/{{image.Id}}/json"
                                                  target="_blank"><img src="static/img/json-logo.png" height="32"></a></h2>
                     <!-- Alert if we get nothing from server -->
                     <h2 ng-show="!image" class="alert alert-danger" role="alert">No such image!</h2>
@@ -25,53 +25,48 @@
                                 <tbody>
                                 <tr>
                                     <td>Id</td>
-                                    <td>{{image.id}}</td>
+                                    <td>{{image.Id}}</td>
                                 </tr>
                                 <tr>
                                     <td>Parent</td>
-                                    <td><a ng-href="/images/{{image.parent}}">{{image.parent}}</a></td>
+                                    <td><a ng-href="/dockerregistryapi/images/{{image.ParentId}}/json">{{image.ParentId}}</a></td>
                                 </tr>
+                               <tr>
+                                    <td>Build Information</td>
+                                    <td>{{image.BuildInfo}}</td>
+                                </tr>
+                               <tr>
+                                    <td>Dockerfile</td>
+                                    <td>{{image.Dockerfile}}</td>
+                                </tr>								
                                 <tr>
                                     <td>Author</td>
                                     <td>{{image.Author}}</td>
                                 </tr>
                                 <tr>
                                     <td>Architecture</td>
-                                    <td>{{image.architecture}}</td>
+                                    <td>{{image.Architecture}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Comment</td>
-                                    <td>{{image.Comment}}</td>
+                                    <td>Readme</td>
+                                    <td>{{image.Readme}}</td>
                                 </tr>
                                 <tr>
                                     <td>Created</td>
-                                    <td>{{image.created}}</td>
+                                    <td>{{image.Created}}</td>
                                 </tr>
                                 <tr>
                                     <td>DockerVersion</td>
-                                    <td>{{image.docker_version}}</td>
+                                    <td>{{image.DockerVersion}}</td>
                                 </tr>
                                 <tr>
                                     <td>Os</td>
-                                    <td>{{image.os}}</td>
+                                    <td>{{image.Os}}</td>
                                 </tr>
                                 <tr>
                                     <td>Size</td>
                                     <td>{{image.Size}}</td>
                                 </tr>
-                            </table>
-                            <hr/>
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Ancestry</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="ancestry in ancestries">
-                                    <td><a ng-href="/{{ancestry}}">{{ancestry}}</a></td>
-                                </tr>
-                                </tbody>
                             </table>
                         </tab>
                         <tab heading="Information">

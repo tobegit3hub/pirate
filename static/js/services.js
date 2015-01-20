@@ -54,8 +54,8 @@ seagullServices.service('dockerService', ['$http', '$q',
             return getDataForURI(getImageBaseURI + user + "/" + repo + '/json');
         }
 
-        function getImageInfo(id) {
-            return getDataForURI(getImageBaseURI + id + '/info/json');
+        function getImageInfo(id, name, tag) {
+            return getDataForURI(getImageBaseURI +'info?id=' + id + "&name=" + name + "&tag=" + tag);
         }
 
         function searchImages(term) {

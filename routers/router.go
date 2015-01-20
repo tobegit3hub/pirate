@@ -18,7 +18,7 @@ func init() {
 	/* HTTP API for docker remote API */
 	beego.Router("/dockerregistryapi/images/json", &controllers.DockerregistryapiController{}, "get:GetImages")
 	beego.Router("/dockerregistryapi/images/:id/json", &controllers.DockerregistryapiController{}, "get:GetImage")
-	beego.Router("/dockerregistryapi/images/:id/info/json", &controllers.DockerregistryapiController{}, "get:GetImageInfo")
+	beego.Router("/dockerregistryapi/images/info", &controllers.DockerregistryapiController{}, "get:GetImageInfo")
 	beego.Router("/dockerregistryapi/images/:user/:repo/json", &controllers.DockerregistryapiController{}, "get:GetUserImage")
 	beego.Router("/dockerregistryapi/repositories/:name/:repo/tags/:tag", &controllers.DockerregistryapiController{}, "delete:DeleteImage")
 	beego.Router("/dockerregistryapi/version", &controllers.DockerregistryapiController{}, "get:GetVersion")

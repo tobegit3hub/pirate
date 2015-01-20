@@ -27,7 +27,7 @@ seagull.config(['$locationProvider', '$routeProvider',
         templateUrl: '/static/html/images.html',
         controller: 'ImagesController'
       }).
-      when('/images/:id', {
+      when('/images/info', {
         templateUrl: '/static/html/image.html',
         controller: 'ImageController'
       }).
