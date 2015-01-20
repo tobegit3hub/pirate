@@ -19,6 +19,7 @@ import (
 )
 
 const README_MD_FILE = "/app/README.md"
+const DOCKERFILE_FILE = "/app/Dockerfile"
 const REGISTRY_PATH = "/registry"
 
 /* Give address and method to request docker unix socket */
@@ -98,14 +99,22 @@ func getTags(name string) string {
     return result
 }
 
-func getReadme(id string)(string,error) {
+func getReadme(id string)(string,string, error) {
     readmefile := REGISTRY_PATH + "/" + id + "/" + README_MD_FILE 
-    dat, err := ioutil.ReadFile(readmefile)
-    if err!=nil {
+	dockerfile := REGISTRY_PATH + "/" + id + "/" + DOCKERFILE_FILE
+    dat1, err1 := ioutil.ReadFile(readmefile)
+	dat2, err2 := ioutil.ReadFile(dockerfile)
+    if err1!=nil {
         fmt.Printf("can't find %s\n",readmefile) 
-        return "", errors.New("can't find the file")
     } 
-    return string(dat),nil
+	if err2!=nil {
+        fmt.Printf("can't find %s\n",dockerfile) 
+    }
+	if err1 != nil && err2 != nil {
+		return "","",errors.New("can't find the file")
+		
+	} 
+    return string(dat1),string(dat2),nil
 }
 
 /* Wrap docker remote API to get images */
@@ -284,13 +293,34 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	this.Ctx.Input.Bind(&tag, "tag")
 	fmt.Printf("id:%s,name:%s,tag:%s", id, name, tag)
 	
+	// send message for image
+	address := "/images/" + id + "/json"
+	result := RequestRegistry(address, "GET")
+	
+	var objmap map[string]json.RawMessage
+	json.Unmarshal([]byte(result), &objmap)
+
+	var info imageInfo
+
+	info.ParentId = string(objmap["parent"])	
+	info.Architecture = string(objmap["architecture"])	
+	info.Created=string(objmap["created"])
+	info.Author = string(objmap["author"])
+	info.Os = string(objmap["os"])
+	info.Comment = ""
+	info.DockerVersion = string(objmap["docker_version"])
+	info.Size = string(objmap["Size"])
+	
     readme := ""
+	dockerfile := ""
 	var parentId []string
     for i:=0;; {      // i is used to control the depth of the layer
         fmt.Println("Check id:" + id)
-        contents, err := getReadme(id)
+        dat1, dat2, err := getReadme(id)
         if err == nil || i > 5 {
-            readme = contents
+            // readme = contents
+			readme = dat1
+			dockerfile = dat2
             break  // found README
         }
         i = i+1 
@@ -307,21 +337,19 @@ func (this *DockerregistryapiController) GetImageInfo() {
     if readme == "" {
         readme = "not found, will set to default information"
     }
-    var info imageInfo
+	
+	if dockerfile == "" {
+	    dockerfile = "not found, will set to default infor"
+	}
+	
+
     info.Readme = readme
 	info.Id = id
 	info.Name = name
 	info.Tag = tag
-	info.ParentId = parentId[0]
 	info.BuildInfo ="this is build log"
-	info.Dockerfile = "this is Dockerfile"
-	info.Architecture = "amd64"	
-	info.Created="2014-12-01"
-	info.Author = "Larry Cai larry.caiyu@gmail.com"
-	info.Os = "linux"
-	info.Comment = ""
-	info.DockerVersion = "1.2.0"
-	info.Size = "0"
+	info.Dockerfile = dockerfile
+
     all,_ := json.Marshal(info)
     // fmt.Println(string(all))
 	
