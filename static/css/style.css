@@ -52,3 +52,7 @@
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
 }
+
+#imageInfoHeader h1 {
+    margin: 0px;
+}

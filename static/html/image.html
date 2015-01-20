@@ -1,80 +1,71 @@
 <!-- The image page, refer to static/js/controller -->
-<div ng-controller="ImageController">
-    <div id="content">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 ng-show="image">{{image.Name}}:{{image.Tag}} <a ng-href="/dockerregistryapi/images/{{image.Id}}/json"
-                                                 target="_blank"><img src="static/img/json-logo.png" height="32"></a></h2>
-                    <!-- Alert if we get nothing from server -->
-                    <h2 ng-show="!image" class="alert alert-danger" role="alert">No such image!</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <tabset>
-                        <tab heading="Attributes">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Attribute</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                <tr>
-                                    <td>Id</td>
-                                    <td>{{image.Id}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Parent</td>
-                                    <td><a ng-href="/dockerregistryapi/images/{{image.ParentId}}/json">{{image.ParentId}}</a></td>
-                                </tr>
-                               <tr>
-                                    <td>Build Information</td>
-                                    <td>{{image.BuildInfo}}</td>
-                                </tr>
-                               <tr>
-                                    <td>Dockerfile</td>
-                                    <td>{{image.Dockerfile}}</td>
-                                </tr>								
-                                <tr>
-                                    <td>Author</td>
-                                    <td>{{image.Author}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Architecture</td>
-                                    <td>{{image.Architecture}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Readme</td>
-                                    <td>{{image.Readme}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Created</td>
-                                    <td>{{image.Created}}</td>
-                                </tr>
-                                <tr>
-                                    <td>DockerVersion</td>
-                                    <td>{{image.DockerVersion}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Os</td>
-                                    <td>{{image.Os}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Size</td>
-                                    <td>{{image.Size}}</td>
-                                </tr>
-                            </table>
-                        </tab>
-                        <tab heading="Information">
-                            <md ng-model="mdInfo"></md>
-                        </tab>
-                    </tabset>
-                </div>
+<section class="main-container" ng-controller="ImageController">
+    <div class="container" ng-show="!image">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="alert alert-danger" role="alert">No such image!</h3>
             </div>
         </div>
     </div>
-</div> <!-- End of this angular page -->
+    <div class="container" ng-show="image">
+        <div id="imageInfoHeader" class="row">
+            <div class="page-header">
+                <h1 class="col-md-6">{{image.Name}}:{{image.Tag}}
+                    <a ng-href="/dockerregistryapi/images/{{image.id}}/json" target="_blank">
+                        <img src="static/img/json-logo.png" height="32">
+                    </a>
+                </h1>
+                <div class="input-group col-md-6">
+                    <span class="input-group-addon" id="basic-addon1">Pull Repo</span>
+                    <input type="text" class="form-control" aria-describedby="basic-addon1" value="{{pullUrl}}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- main start -->
+            <div class="tabs col-md-9">
+                <tabset>
+                    <tab heading="README">
+                        <pre>
+                            <code class="readme">
+                                <md ng-model="mdInfo"></md>
+                            </code>
+                        </pre>
+                    </tab>
+                    <tab heading="DOCKERFILE">
+                        <pre>
+                            <code class="dockerfile">{{txtDockerfile}}</code>
+                        </pre>
+                    </tab>
+                    <tab heading="BUILDINFO">
+                        <pre>
+                            <code class="buildinfo">{{txtBuildinfo}}</code>
+                        </pre>
+                    </tab>
+                    <tab heading="TAG"></tab>
+                    <tab heading="LAYERS"></tab>
+                </tabset>
+            </div>
+            <!-- main end -->
+
+            <!-- sidebar start -->
+            <aside class="col-md-3">
+                <div class="sidebar panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Properties</h3>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" tooltip="ID"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> {{image.id}}</li>
+                        <li class="list-group-item" tooltip="Author"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{image.Author}}</li>
+                        <li class="list-group-item" tooltip="Created"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{image.created}}</li>
+                        <li class="list-group-item" tooltip="Architecture"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {{image.architecture}}</li>
+                        <li class="list-group-item" tooltip="DockerVersion"><span class="glyphicon glyphicon-compressed" aria-hidden="true"></span> {{image.docker_version}}</li>
+                        <li class="list-group-item" tooltip="Os"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> {{image.os}}</li>
+                        <li class="list-group-item" tooltip="Size"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> {{image.Size}}</li>
+                    </ul>
+                </div>
+            </aside>
+            <!-- sidebar end -->
+        </div>
+    </div>
+</section> <!-- End of this angular page -->
