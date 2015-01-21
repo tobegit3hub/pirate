@@ -288,6 +288,7 @@ type imageInfo struct {
 /* Wrap docker remote API to get data of image */
 func (this *DockerregistryapiController) GetImageInfo() {
 	var id, name, tag string
+
 	this.Ctx.Input.Bind(&id, "id")
 	this.Ctx.Input.Bind(&name, "name")
 	this.Ctx.Input.Bind(&tag, "tag")
