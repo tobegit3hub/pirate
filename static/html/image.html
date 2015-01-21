@@ -11,7 +11,7 @@
         <div id="imageInfoHeader" class="row">
             <div class="page-header">
                 <h1 class="col-md-6">{{image.Name}}:{{image.Tag}}
-                    <a ng-href="/dockerregistryapi/images/{{image.id}}/json" target="_blank">
+                    <a ng-href="/dockerregistryapi/images/{{image.Id}}/json" target="_blank">
                         <img src="static/img/json-logo.png" height="32">
                     </a>
                 </h1>
@@ -55,12 +55,12 @@
                         <h3 class="panel-title">Properties</h3>
                     </div>
                     <ul class="list-group">
-                        <li class="list-group-item" tooltip="ID"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> {{image.id}}</li>
+                        <li class="list-group-item" tooltip="ID"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> {{image.Id | limitTo:12}}</li>
                         <li class="list-group-item" tooltip="Author"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{image.Author}}</li>
-                        <li class="list-group-item" tooltip="Created"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{image.created}}</li>
-                        <li class="list-group-item" tooltip="Architecture"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {{image.architecture}}</li>
-                        <li class="list-group-item" tooltip="DockerVersion"><span class="glyphicon glyphicon-compressed" aria-hidden="true"></span> {{image.docker_version}}</li>
-                        <li class="list-group-item" tooltip="Os"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> {{image.os}}</li>
+                        <li class="list-group-item" tooltip="Created"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{image.Created}}</li>
+                        <li class="list-group-item" tooltip="Architecture"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {{image.Architecture}}</li>
+                        <li class="list-group-item" tooltip="DockerVersion"><span class="glyphicon glyphicon-compressed" aria-hidden="true"></span> {{image.DockerVersion}}</li>
+                        <li class="list-group-item" tooltip="Os"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> {{image.Os}}</li>
                         <li class="list-group-item" tooltip="Size"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> {{image.Size}}</li>
                     </ul>
                 </div>
