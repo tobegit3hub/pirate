@@ -99,6 +99,8 @@ func getTags(name string) string {
 
 const README_MD_FILE = "app/README.md"
 const DOCKERFILE_FILE = "app/Dockerfile"
+const BUILD_LOG_FILE = "app/BUILD.log"
+const DOCKER_PKG_FILE = "app/DOCKER.pkg"
 const REGISTRY_PATH = "/registry/images"
 
 func readFileFromTar(filelist string, tarfile string, extracted_file string)(string, error) {
@@ -111,7 +113,7 @@ func readFileFromTar(filelist string, tarfile string, extracted_file string)(str
    }
    return "",errors.New("can't find the file")
 }
-func getReadme(id string)(string,string, error) {
+func getReadme(id string)(string,string,string,string,error) {
     layerfile := REGISTRY_PATH + "/" + id + "/layer"
 	
 	cmd := "tar -tf "+ layerfile
@@ -120,21 +122,18 @@ func getReadme(id string)(string,string, error) {
        fmt.Printf("shall not happen !! %s", err)
     } 
    
-    // fmt.Printf("%s", out)
+    // fmt.Printf("========================  %s", out)
 	
     dat1, err1 := readFileFromTar(string(out), layerfile,README_MD_FILE)
 	dat2, err2 := readFileFromTar(string(out), layerfile,DOCKERFILE_FILE)
-    if err1!=nil {
-        fmt.Printf("can't find %s\n",README_MD_FILE) 
-    } 
-	if err2!=nil {
-        fmt.Printf("can't find %s\n",DOCKERFILE_FILE) 
-    }
-	if err1 != nil && err2 != nil {
-		return "","",errors.New("can't find the file")
+	dat3, err3 := readFileFromTar(string(out), layerfile,BUILD_LOG_FILE)
+	dat4, err4 := readFileFromTar(string(out), layerfile,DOCKER_PKG_FILE)
+	
+	if err1 != nil && err2 != nil && err3 != nil && err4 != nil {
+		return "","","","",errors.New("can't find the file")
 		
 	} 
-    return string(dat1),string(dat2),nil
+    return string(dat1),string(dat2),string(dat3),string(dat4),nil
 }
 
 /* Wrap docker remote API to get images */
@@ -303,8 +302,10 @@ type imageInfo struct {
 	DockerVersion string
 	Os string
 	Size string
+	Dockerpkg string
 }
 
+const DOCKERHUB_URL="https://registry.hub.docker.com/u"
 /* Wrap docker remote API to get data of image */
 func (this *DockerregistryapiController) GetImageInfo() {
 	var id, name, tag string
@@ -334,14 +335,18 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	
     readme := ""
 	dockerfile := ""
+	buildlogfile := ""
+	dockerpkgfile := ""
 	var parentId []string
     for i:=0;; {      // i is used to control the depth of the layer
         fmt.Println("Check id:" + id)
-        dat1, dat2, err := getReadme(id)
+        dat1, dat2,dat3,dat4, err := getReadme(id)
         if err == nil || i > 5 {
             // readme = contents
 			readme = dat1
 			dockerfile = dat2
+			buildlogfile = dat3
+			dockerpkgfile= dat4
             break  // found README
         }
         i = i+1 
@@ -356,20 +361,26 @@ func (this *DockerregistryapiController) GetImageInfo() {
         //fmt.Println(parentId)
     }
     if readme == "" {
-        readme = "not found, will set to default information"
+	    url := DOCKERHUB_URL + "/" + name 
+	    readme = fmt.Sprintf("Not find in docker image, mostly you could try [%s](%s)",url,url)
     }
 	
 	if dockerfile == "" {
-	    dockerfile = "not found, will set to default infor"
+	    url := DOCKERHUB_URL + "/" + name + "/dockerfile"
+	    dockerfile = fmt.Sprintf("Not found in docker image, mostly you want to check %s",url)
 	}
-	
+    
+    if buildlogfile == "" {
+	    buildlogfile ="no build log is attached"
+	}	
 
     info.Readme = readme
 	info.Id = id
 	info.Name = name
 	info.Tag = tag
-	info.BuildInfo ="this is build log"
+	info.BuildInfo = buildlogfile
 	info.Dockerfile = dockerfile
+	info.Dockerpkg = dockerpkgfile
 
     all,_ := json.Marshal(info)
     // fmt.Println(string(all))
