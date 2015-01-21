@@ -16,11 +16,8 @@ import (
 	"errors"
 	"strings"
 	"encoding/json"
+	"os/exec"
 )
-
-const README_MD_FILE = "/app/README.md"
-const DOCKERFILE_FILE = "/app/Dockerfile"
-const REGISTRY_PATH = "/registry"
 
 /* Give address and method to request docker unix socket */
 func RequestRegistry(address, method string) string {
@@ -99,16 +96,39 @@ func getTags(name string) string {
     return result
 }
 
+
+const README_MD_FILE = "app/README.md"
+const DOCKERFILE_FILE = "app/Dockerfile"
+const REGISTRY_PATH = "/registry/images"
+
+func readFileFromTar(filelist string, tarfile string, extracted_file string)(string, error) {
+   
+    if strings.Index(string(filelist),extracted_file) != -1 {
+        fmt.Printf("found the file %s\n", extracted_file)
+        cmd := fmt.Sprintf("tar -xOf %s %s",tarfile, extracted_file)
+        dat1, err1 := exec.Command("sh","-c",cmd).Output()
+        return string(dat1),err1
+   }
+   return "",errors.New("can't find the file")
+}
 func getReadme(id string)(string,string, error) {
-    readmefile := REGISTRY_PATH + "/" + id + "/" + README_MD_FILE 
-	dockerfile := REGISTRY_PATH + "/" + id + "/" + DOCKERFILE_FILE
-    dat1, err1 := ioutil.ReadFile(readmefile)
-	dat2, err2 := ioutil.ReadFile(dockerfile)
+    layerfile := REGISTRY_PATH + "/" + id + "/layer"
+	
+	cmd := "tar -tf "+ layerfile
+    out, err := exec.Command("sh","-c",cmd).Output()
+    if err != nil {
+       fmt.Printf("shall not happen !! %s", err)
+    } 
+   
+    // fmt.Printf("%s", out)
+	
+    dat1, err1 := readFileFromTar(string(out), layerfile,README_MD_FILE)
+	dat2, err2 := readFileFromTar(string(out), layerfile,DOCKERFILE_FILE)
     if err1!=nil {
-        fmt.Printf("can't find %s\n",readmefile) 
+        fmt.Printf("can't find %s\n",README_MD_FILE) 
     } 
 	if err2!=nil {
-        fmt.Printf("can't find %s\n",dockerfile) 
+        fmt.Printf("can't find %s\n",DOCKERFILE_FILE) 
     }
 	if err1 != nil && err2 != nil {
 		return "","",errors.New("can't find the file")
