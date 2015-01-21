@@ -1,0 +1,24 @@
+# see issue #18 discussion https://github.com/tobegit3hub/pirate/issues/18#issuecomment-70767216 
+# will have one documentation
+# package version is for this spec, used for upgrade when needed
+PACKAGE_VERSION=0.3
+
+# some important logs for the build and general information
+README=/app/README.md
+DOCKERFILE=/app/Dockerfile
+
+# build information for reference
+BUILDLOG=/app/BUILD.log
+BUILDLINK=https://registry.hub.docker.com/u/tobegit3hub/pirate
+BUILDURL=https://registry.hub.docker.com/u/tobegit3hub/pirate
+
+# source base
+SOURCEURL=https://github.com/tobegit3hub/pirate
+SOURCE_COMMIT=54e77b41a5eff5f2829944be71b57468ac6578d7
+
+# tag is the tag pushed to registry as this image created.
+TAG=20150102-SNAPSHOT,LATEST,SPRINT-1
+
+# some admin CM stuff ?
+VERSION=DOKK-15001
+ORGANIZATION=DOKK

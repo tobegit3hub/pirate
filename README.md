@@ -38,6 +38,37 @@ Planned to have
  * `PIRATE_URL_ALIAS`  : add extra url, see #13
  * `PIRATE_DOC_REF`    : give wiki link as reference, see #5
 
+## Feature: More docker image information ##
+
+see detail in [issue #18](https://github.com/tobegit3hub/pirate/issues/18)
+
+In order to get more information for docker image, it is planned to store image information inside docker image, Since current registry API just provide simple info.
+
+In `Dockerfile`, this could be good practice for your Dockerfile. It can be used for other purpose as well
+
+    ADD . /app
+
+Then in this app, it will scan the `/registry` raw data to retrieve this information 	
+
+	root@boot2docker:/mnt/sda1/var/lib/docker/aufs/diff/b3f7db6bab993bf243713b94d657aff4982be95b344c7abfd5941b339de073ec# ls -1 app
+	Dockerfile
+	LICENSE
+	README.md
+	BUILD.log
+	DOCKER.pkg
+	data
+    ...
+
+### Share data between registry
+
+In order to let `pirate` get registry data, it needs to be shared (you can use data container as well)
+
+For example you have `/mnt/sda1/registry` for sharing data (`boot2docker` env)
+
+    # mkdir /mnt/sda1/registry
+	docker run -d -p 5000:5000 -v /mnt/sda1/registry:/tmp/registry --name registry registry
+	docker run -d -p 9527:9527 -v /mnt/sda1/registry:/registry --link registry:registry tobegit3hub/pirate
+
 ## Testing 
 
 Tag local testing images 
@@ -50,7 +81,7 @@ Push images into registry
  
 	docker push localhost:5000/hello-world
 	docker push localhost:5000/hello-world:1.0
-	docker push localhost:5000/larrycai/hello-world
+	docker push localhost:5000/larrycai/hello-world	
 
 ## Get Involved
 

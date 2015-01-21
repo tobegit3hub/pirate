@@ -21,6 +21,8 @@ WORKDIR /go/src/github.com/tobegit3hub/pirate/
 # Build the project
 RUN go build pirate.go
 
+ADD . /app
+
 # This should be the same as httpport in conf/app.conf
 EXPOSE 9527
 
