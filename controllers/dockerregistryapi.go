@@ -100,7 +100,7 @@ func getTags(name string) string {
 const README_MD_FILE = "app/README.md"
 const DOCKERFILE_FILE = "app/Dockerfile"
 const BUILD_LOG_FILE = "app/BUILD.log"
-const DOCKER_PKG_FILE = "app/DOCKER.pkg"
+const PIRATE_INI_FILE = "app/PIRATE.ini"
 const REGISTRY_PATH = "/registry/images"
 
 func readFileFromTar(filelist string, tarfile string, extracted_file string)(string, error) {
@@ -127,7 +127,7 @@ func getReadme(id string)(string,string,string,string,error) {
     dat1, err1 := readFileFromTar(string(out), layerfile,README_MD_FILE)
 	dat2, err2 := readFileFromTar(string(out), layerfile,DOCKERFILE_FILE)
 	dat3, err3 := readFileFromTar(string(out), layerfile,BUILD_LOG_FILE)
-	dat4, err4 := readFileFromTar(string(out), layerfile,DOCKER_PKG_FILE)
+	dat4, err4 := readFileFromTar(string(out), layerfile,PIRATE_INI_FILE)
 	
 	if err1 != nil && err2 != nil && err3 != nil && err4 != nil {
 		return "","","","",errors.New("can't find the file")
@@ -302,7 +302,7 @@ type imageInfo struct {
 	DockerVersion string
 	Os string
 	Size string
-	Dockerpkg string
+	PirateFile string
 }
 
 const DOCKERHUB_URL="https://registry.hub.docker.com/u"
@@ -336,7 +336,7 @@ func (this *DockerregistryapiController) GetImageInfo() {
     readme := ""
 	dockerfile := ""
 	buildlogfile := ""
-	dockerpkgfile := ""
+	piratefile := ""
 	var parentId []string
     for i:=0;; {      // i is used to control the depth of the layer
         fmt.Println("Check id:" + id)
@@ -346,7 +346,7 @@ func (this *DockerregistryapiController) GetImageInfo() {
 			readme = dat1
 			dockerfile = dat2
 			buildlogfile = dat3
-			dockerpkgfile= dat4
+			piratefile= dat4
             break  // found README
         }
         i = i+1 
@@ -380,7 +380,7 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	info.Tag = tag
 	info.BuildInfo = buildlogfile
 	info.Dockerfile = dockerfile
-	info.Dockerpkg = dockerpkgfile
+	info.PirateFile = piratefile
 
     all,_ := json.Marshal(info)
     // fmt.Println(string(all))
