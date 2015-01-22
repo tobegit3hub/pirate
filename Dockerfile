@@ -10,7 +10,7 @@ RUN go build pirate.go
 
 # below data is useful to pirate GUI
 # ADD [^.*] /app
-ADD README.mk Dockerfile BUILD.log PIRATE.ini /app
+ADD README.mk Dockerfile BUILD.log PIRATE.ini /app/
 
 # Expose the port
 EXPOSE 9527
