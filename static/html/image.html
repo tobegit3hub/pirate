@@ -1,12 +1,5 @@
 <!-- The image page, refer to static/js/controller -->
 <section class="main-container" ng-controller="ImageController">
-    <div class="container" ng-show="!image">
-        <div class="row">
-            <div class="col-md-12">
-                <h3 class="alert alert-danger" role="alert">No such image!</h3>
-            </div>
-        </div>
-    </div>
     <div class="container" ng-show="image">
         <div id="imageInfoHeader" class="row">
             <div class="page-header">
@@ -26,21 +19,23 @@
             <div class="tabs col-md-9">
                 <tabset>
                     <tab heading="README">
-                        <pre>
-                            <code class="readme">
-                                <md ng-model="mdInfo"></md>
-                            </code>
-                        </pre>
+                        <div class="readme">
+                            <md ng-model="mdInfo"></md>
+                        </div>
                     </tab>
                     <tab heading="DOCKERFILE">
-                        <pre>
-                            <code class="dockerfile">{{txtDockerfile}}</code>
-                        </pre>
+                        <div class="dockerfile">
+                            <pre>
+                                <code><br>{{txtDockerfile}}</code>
+                            </pre>
+                        </div>
                     </tab>
                     <tab heading="BUILDINFO">
-                        <pre>
-                            <code class="buildinfo">{{txtBuildinfo}}</code>
-                        </pre>
+                        <div class="buildinfo">
+                            <pre>
+                                <code><br>{{txtBuildinfo}}</code>
+                            </pre>
+                        </div>
                     </tab>
                     <tab heading="TAG"></tab>
                     <tab heading="LAYERS"></tab>
@@ -57,7 +52,7 @@
                     <ul class="list-group">
                         <li class="list-group-item" tooltip="ID"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> {{image.Id | limitTo:12}}</li>
                         <li class="list-group-item" tooltip="Author"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{image.Author}}</li>
-                        <li class="list-group-item" tooltip="Created"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{image.Created}}</li>
+                        <li class="list-group-item" tooltip="Created"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{image.Created | date:'yyyy-MM-dd HH:mm:ss'}}</li>
                         <li class="list-group-item" tooltip="Architecture"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {{image.Architecture}}</li>
                         <li class="list-group-item" tooltip="DockerVersion"><span class="glyphicon glyphicon-compressed" aria-hidden="true"></span> {{image.DockerVersion}}</li>
                         <li class="list-group-item" tooltip="Os"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> {{image.Os}}</li>
