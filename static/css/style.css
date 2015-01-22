@@ -56,3 +56,13 @@
 #imageInfoHeader h1 {
     margin: 0px;
 }
+
+.readme, .dockerfile, .buildinfo {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-color: #dbdde0;
+    border-style: solid;
+    border-width: 0 1px 1px;
+    padding: 10px 20px;
+    position: relative;
+}

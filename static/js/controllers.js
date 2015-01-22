@@ -116,6 +116,8 @@ seagullControllers.controller('ImageController', ['$scope', '$routeParams', 'doc
         dockerService.getVersion().then(function (version) {
             $scope.version = version;
             dockerService.getImageInfo($routeParams.id,$routeParams.name,$routeParams.tag).then(function (image) {
+                var createTime = Date.parse(image.Created.replace(/"/g,''));
+                image.Created = createTime;
                 $scope.image = image;
                 $scope.pullUrl = "docker pull " + $scope.version.PirateUrlAlias + "/" + image.Name + ":" + image.Tag;
                 $scope.mdInfo = image.Readme;
