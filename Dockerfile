@@ -4,13 +4,12 @@ MAINTAINER tobe tobeg3oogle@gmail.com
 # Install dependency
 RUN go get github.com/astaxie/beego
 
-Add [^.]* /go/src/github.com/tobegit3hub/pirate/
+COPY . /go/src/github.com/tobegit3hub/pirate/
 WORKDIR /go/src/github.com/tobegit3hub/pirate/
 RUN go build pirate.go
 
 # below data is useful to pirate GUI
-# ADD [^.*] /app
-ADD README.mk Dockerfile BUILD.log PIRATE.ini /app/
+COPY README.md Dockerfile BUILD.log PIRATE.ini /app/
 
 # Expose the port
 EXPOSE 9527
