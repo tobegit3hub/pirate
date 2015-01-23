@@ -89,10 +89,8 @@ Pirate is implemented in Go and JavaScript with tools like Beego, AngularJS, Boo
 
 * Setup go path and try `echo $GOPATH`
 * `go get github.com/astaxie/beego`
-* `go get github.com/beego/bee`
 * `go get github.com/tobegit3hub/pirate`
-* `bee run seagull` for dubuging 
-* or `./pirate` or `sudo ./pirate` to access /var/run/docker.sock
+* `./pirate`
 
 ### Debug locally inside docker
 
@@ -101,12 +99,12 @@ git clone the code to the local directly, it is ok for Windows & MacOS as well, 
 Then simple use shared folder to debug it
     
 	$ docker run -it -p 9527:9527 --link registry:registry -v $PWD:/go/src/github.com/tobegit3hub/pirate tobegit3hub/pirate bash
-	root@55640c0fb4f3:/go/src/github.com/tobegit3hub/pirate# bee run pirate
+	root@55640c0fb4f3:/go/src/github.com/tobegit3hub/pirate# go run pirate.go
 
 If you want to have docker image feature
 
 	$ docker run -it -p 9527:9527 --link registry:registry -v /mnt/sda1/registry:/registry -v $PWD:/go/src/github.com/tobegit3hub/pirate tobegit3hub/pirate bash
-	root@55640c0fb4f3:/go/src/github.com/tobegit3hub/pirate# bee run pirate	
+	root@55640c0fb4f3:/go/src/github.com/tobegit3hub/pirate# go run pirate.go
 	
 More detail in [seagull-design-and-implement](docs/2014-10-14-seagull-design-and-implement.md) and we have excellent documents in [docs](https://github.com/tobegit3hub/seagull/tree/master/docs).
 

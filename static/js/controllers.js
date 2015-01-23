@@ -122,7 +122,9 @@ seagullControllers.controller('ImageController', ['$scope', '$routeParams', 'doc
                 $scope.pullUrl = "docker pull " + $scope.version.PirateUrlAlias + "/" + image.Name + ":" + image.Tag;
                 $scope.mdInfo = image.Readme;
                 $scope.txtDockerfile = image.Dockerfile;
-                $scope.txtBuildinfo = image.BuildInfo;
+                $scope.txtBuildinfo = image.PirateFile;
+				$scope.txtTag       = image.Tags;
+				$scope.txtLayers    = image.Layers;
             });
         });
     }]);

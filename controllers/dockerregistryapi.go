@@ -96,6 +96,13 @@ func getTags(name string) string {
     return result
 }
 
+func getAncestry(id string) string {
+	address := "/images/" + id + "/ancestry"
+	fmt.Println(address)
+	result := RequestRegistry(address, "GET")
+    return result
+}
+
 
 const README_MD_FILE = "app/README.md"
 const DOCKERFILE_FILE = "app/Dockerfile"
@@ -303,6 +310,7 @@ type imageInfo struct {
 	Os string
 	Size string
 	PirateFile string
+	Tags string
 }
 
 const DOCKERHUB_URL="https://registry.hub.docker.com/u"
@@ -381,6 +389,13 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	info.BuildInfo = buildlogfile
 	info.Dockerfile = dockerfile
 	info.PirateFile = piratefile
+	
+	tags := getTags(name)
+	info.Tags = tags
+	
+	layers := getAncestry(id)
+	//fmt.Println("layers:", layers)
+	info.Layers = layers
 
     all,_ := json.Marshal(info)
     // fmt.Println(string(all))
