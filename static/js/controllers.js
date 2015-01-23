@@ -125,6 +125,8 @@ seagullControllers.controller('ImageController', ['$scope', '$routeParams', 'doc
                 $scope.txtBuildinfo = image.PirateFile;
 				$scope.txtTag       = image.Tags;
 				$scope.txtLayers    = image.Layers;
+				$scope.tags         = image.Tags2;
+				$scope.layers       = image.Layers2;
             });
         });
     }]);

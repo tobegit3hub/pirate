@@ -311,6 +311,10 @@ type imageInfo struct {
 	Size string
 	PirateFile string
 	Tags string
+	Pirate2 interface{}
+	Layers2 []string
+    Tags2 interface{}
+	
 }
 
 const DOCKERHUB_URL="https://registry.hub.docker.com/u"
@@ -392,13 +396,23 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	
 	tags := getTags(name)
 	info.Tags = tags
-	
+
 	layers := getAncestry(id)
 	//fmt.Println("layers:", layers)
 	info.Layers = layers
+	
+	// http://play.golang.org/p/6b1buUfE7y
+	var f interface{}
+	json.Unmarshal([]byte(tags), &f)
+    info.Tags2 = f.(map[string]interface{})
 
-    all,_ := json.Marshal(info)
-    // fmt.Println(string(all))
+	var f2 []string
+	json.Unmarshal([]byte(layers), &f2)
+	
+	info.Layers2 = f2
+	
+    all,_ := json.MarshalIndent(info,"","  ")
+    fmt.Println(string(all))
 	
 	this.Ctx.WriteString(string(all))
 }
