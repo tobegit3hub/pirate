@@ -9,7 +9,7 @@ WORKDIR /go/src/github.com/tobegit3hub/pirate/
 RUN go build pirate.go
 
 # below data is useful to pirate GUI
-COPY README.md Dockerfile BUILD.log PIRATE.ini /app/
+COPY README.md Dockerfile PIRATE.ini /app/
 
 # Expose the port
 EXPOSE 9527
