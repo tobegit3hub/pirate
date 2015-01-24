@@ -17,6 +17,7 @@ import (
 	"strings"
 	"encoding/json"
 	"os/exec"
+	"regexp"
 )
 
 /* Give address and method to request docker unix socket */
@@ -120,6 +121,35 @@ func readFileFromTar(filelist string, tarfile string, extracted_file string)(str
    }
    return "",errors.New("can't find the file")
 }
+
+// ini part is referred https://github.com/vaughan0/go-ini/blob/master/ini.go
+var assignRegex  = regexp.MustCompile(`^([^=]+)=(.*)$`)
+
+func getIni(ini string)(map[string]string) {
+    var abc=map[string]string{}
+    lines := strings.Split(ini, "\n")
+    for i, line := range lines {
+		fmt.Println(i, line)
+				line = strings.TrimSpace(line)
+		if len(line) == 0 {
+			// Skip blank lines
+			continue
+		}
+		if line[0] == ';' || line[0] == '#' {
+			// Skip comments
+			continue
+		}
+
+		if groups := assignRegex.FindStringSubmatch(line); groups != nil {
+			key, val := groups[1], groups[2]
+			key, val = strings.TrimSpace(key), strings.TrimSpace(val)
+			abc[key] = val
+		}
+
+    }
+    return abc
+}
+
 func getReadme(id string)(string,string,string,string,error) {
     layerfile := REGISTRY_PATH + "/" + id + "/layer"
 	
@@ -311,7 +341,7 @@ type imageInfo struct {
 	Size string
 	PirateFile string
 	Tags string
-	Pirate2 interface{}
+	Pirate2 map[string]string
 	Layers2 []string
     Tags2 interface{}
 	
@@ -410,6 +440,8 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	json.Unmarshal([]byte(layers), &f2)
 	
 	info.Layers2 = f2
+	
+	info.Pirate2 = getIni(piratefile)
 	
     all,_ := json.MarshalIndent(info,"","  ")
     fmt.Println(string(all))

@@ -33,11 +33,6 @@ So far follow configurations are supported, you can pass via like `-e PIRATE_MOD
  * `PIRATE_MODE=readonly|DELETE`   : default is `DELETE`, disable DELETE operation for each image, good for anonymous access
  * `REGISTRY_URL=<registry url>`   : default is `registry:5000`, don't put `http` in front.
  
-Planned to have
- 
- * `PIRATE_URL_ALIAS`  : add extra url, see #13
- * `PIRATE_DOC_REF`    : give wiki link as reference, see #5
-
 ## Feature: More docker image information ##
 
 see detail in [issue #18](https://github.com/tobegit3hub/pirate/issues/18)
@@ -54,7 +49,6 @@ Then in this app, it will scan the `/registry` raw data to retrieve this informa
 	Dockerfile
 	LICENSE
 	README.md
-	BUILD.log
 	DOCKER.pkg
 	data
     ...
@@ -98,12 +92,12 @@ git clone the code to the local directly, it is ok for Windows & MacOS as well, 
 
 Then simple use shared folder to debug it
     
-	$ docker run -it -p 9527:9527 --link registry:registry -v $PWD:/go/src/github.com/tobegit3hub/pirate tobegit3hub/pirate bash
+	docker run -it -p 9527:9527 --link registry:registry -v $PWD:/go/src/github.com/tobegit3hub/pirate tobegit3hub/pirate bash
 	root@55640c0fb4f3:/go/src/github.com/tobegit3hub/pirate# go run pirate.go
 
 If you want to have docker image feature
 
-	$ docker run -it -p 9527:9527 --link registry:registry -v /mnt/sda1/registry:/registry -v $PWD:/go/src/github.com/tobegit3hub/pirate tobegit3hub/pirate bash
+	docker run -it -p 9527:9527 --link registry:registry -v /mnt/sda1/registry:/registry -v $PWD:/go/src/github.com/tobegit3hub/pirate tobegit3hub/pirate bash
 	root@55640c0fb4f3:/go/src/github.com/tobegit3hub/pirate# go run pirate.go
 	
 More detail in [seagull-design-and-implement](docs/2014-10-14-seagull-design-and-implement.md) and we have excellent documents in [docs](https://github.com/tobegit3hub/seagull/tree/master/docs).
