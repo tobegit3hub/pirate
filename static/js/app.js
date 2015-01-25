@@ -38,10 +38,6 @@ seagull.config(['$locationProvider', '$routeProvider',
       when('/configuration', {
         templateUrl: '/static/html/configuration.html',
         controller: 'ConfigurationController'
-      }).
-      when('/dockerhub', {
-        templateUrl: '/static/html/dockerhub.html',
-        controller: 'DockerhubController'
       });
       /* No default page for angular so that beego can process API request
       otherwise({
