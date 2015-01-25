@@ -3,8 +3,7 @@ package controllers
 /*
  * The docker API controller to access docker unix socket and reponse JSON data
  *
- * Refer to https://docs.docker.com/reference/api/docker_remote_api_v1.14/ for docker remote API
- * Refer to https://github.com/Soulou/curl-unix-socket to know how to access unix docket
+ * Refer to https://docs.docker.com/reference/api/registry_api/ for docker registry API
  */
 
 import (
@@ -20,7 +19,7 @@ import (
 	"regexp"
 )
 
-/* Give address and method to request docker unix socket */
+/* Give address and method to request docker registry API */
 func RequestRegistry(address, method string) string {
 	REGISTRY_URL := "registry:5000"
 	if os.Getenv("REGISTRY_URL") != "" {
@@ -68,11 +67,71 @@ func RequestRegistry(address, method string) string {
 	return string(body)
 }
 
-/* It's a beego controller */
-type DockerregistryapiController struct {
-	beego.Controller
+/*
+ * Here list all the official Registry API
+ *
+ */
+
+func registryGetId(id string) (string) {
+	address := "/images/" + id + "/json"
+	result := RequestRegistry(address, "GET")
+	return result
 }
 
+func registryGetTags(id string) (string) {
+	address := "/images/" + id + "/json"
+	result := RequestRegistry(address, "GET")
+	return result	
+}
+
+func registryGetAncestry(id string) (string) {
+	address := "/images/" + id + "/ancestry"
+	result := RequestRegistry(address, "GET")
+	return result	
+}
+
+func registryGetTagsByName(name string) string {
+	address := "/repositories/" + name + "/tags"
+	fmt.Println(address)
+	result := RequestRegistry(address, "GET")
+    return result
+}
+
+func registryDeleteImage(name,repo,tag string) string {
+	address := "/repositories/" + name + "/" + repo + "/tags/" + tag
+	result := RequestRegistry(address, "DELETE")
+    return result
+}
+
+func registryGetTagsByUserRepo(user,repo string) string {
+	address := "/repositories/" + user + "/" + repo + "/tags"
+	fmt.Println(address)
+	result := RequestRegistry(address, "GET")
+	return result
+}
+
+func registryPing() string {
+	address := "/_ping"
+	result := RequestRegistry(address, "GET")
+	return result
+}
+
+/*
+ * registry Hacked API 
+ *
+ */
+ 
+// https://github.com/docker/docker-registry/issues/63
+func registryGetAllImages() string {
+	address := "/search"	
+	result := RequestRegistry(address, "GET")
+	return result
+}	
+
+/*
+ * structure
+ *
+ */ 
 type image struct {
     Name string
     Id string
@@ -90,21 +149,10 @@ type search struct {
     Results []repository
 }
 
-func getTags(name string) string {
-	address := "/repositories/" + name + "/tags"
-	fmt.Println(address)
-	result := RequestRegistry(address, "GET")
-    return result
-}
-
-func getAncestry(id string) string {
-	address := "/images/" + id + "/ancestry"
-	fmt.Println(address)
-	result := RequestRegistry(address, "GET")
-    return result
-}
-
-
+/*
+ * internal hacked solution to get images' detail
+ *
+ */
 const README_MD_FILE = "app/README.md"
 const DOCKERFILE_FILE = "app/Dockerfile"
 const BUILD_LOG_FILE = "app/BUILD.log"
@@ -175,11 +223,8 @@ func getReadme(id string)(string,string,string,string,error) {
 
 /* Wrap docker remote API to get images */
 func (this *DockerregistryapiController) GetImages() {
-	// https://github.com/docker/docker-registry/issues/63
-	
     // search for all repository
-	address := "/search"	
-	result := RequestRegistry(address, "GET")
+	result := registryGetAllImages()
 	fmt.Println("result:",result)
 	
 	var searchResult search
@@ -192,7 +237,7 @@ func (this *DockerregistryapiController) GetImages() {
     var oneimage image
     for _, repo := range searchResult.Results {
         fmt.Println(repo)
-        tags := getTags(repo.Name)
+        tags := registryGetTagsByName(repo.Name)
         json.Unmarshal([]byte(tags), &f)
         m := f.(map[string]interface{})
         for k, v := range m {
@@ -213,8 +258,7 @@ func (this *DockerregistryapiController) GetImages() {
 /* Wrap docker remote API to get data of image */
 func (this *DockerregistryapiController) GetImage() {
 	id := this.GetString(":id")
-	address := "/images/" + id + "/json"
-	result := RequestRegistry(address, "GET")
+	result := registryGetId(id)
 	this.Ctx.WriteString(result)
 }
 
@@ -222,9 +266,7 @@ func (this *DockerregistryapiController) GetImage() {
 func (this *DockerregistryapiController) GetUserImage() {
 	user := this.GetString(":user")
 	repo := this.GetString(":repo")
-	address := "/repositories/" + user + "/" + repo + "/tags"
-	fmt.Println(address)
-	result := RequestRegistry(address, "GET")
+	result := registryGetTagsByUserRepo(user,repo)
 	this.Ctx.WriteString(result)
 }
 
@@ -233,13 +275,12 @@ func (this *DockerregistryapiController) DeleteImage() {
 	name := this.GetString(":name")
 	repo := this.GetString(":repo")
 	tag := this.GetString(":tag")
-	address := "/repositories/" + name + "/" + repo + "/tags/" + tag
 	var result string
 	if  os.Getenv("PIRATE_MODE") == "readonly" {
-	    fmt.Println("readonly mode, delete is not allowed")
+	    fmt.Println("readonly mode, delete is not allowed, it shall not be seen in UI !!!!")
 	    result = "" 
 	} else {
-		result = RequestRegistry(address, "DELETE")
+		result = registryDeleteImage(name,repo,tag)
 	}
 	this.Ctx.WriteString(result)
 }
@@ -275,10 +316,44 @@ type ping struct {
 	Versions interface{}
 }
 
+type imageInfo struct {
+    Id string
+	ParentId string
+    Name string
+	Tag string
+	Readme string
+	Layers string
+	BuildInfo string
+	Dockerfile string
+	Author string
+	Architecture string
+	Created string
+	Comment string
+	DockerVersion string
+	Os string
+	Size string
+	PirateFile string
+	Tags string
+	Pirate2 map[string]string
+	Layers2 []string
+    Tags2 interface{}
+	
+}
+
+const DOCKERHUB_URL="https://registry.hub.docker.com/u"
+
+/*
+ * Functions are used by controller 
+ */
+ 
+/* It's a beego controller */
+type DockerregistryapiController struct {
+	beego.Controller
+}
+
 /* Wrap docker registry API to get version info */
 func (this *DockerregistryapiController) GetVersion() {
-	address := "/_ping"
-	result := RequestRegistry(address, "GET")
+	result := registryPing()
 	
 	// unmarshall the docker ping result to internal data
     var pingResult ping
@@ -311,44 +386,16 @@ func (this *DockerregistryapiController) GetVersion() {
 	}
 
     configJson,_ := json.Marshal(config)
-    // fmt.Println("config:",string(configJson))
-	
+    
 	this.Ctx.WriteString(string(configJson))
 }
 
 /* Wrap docker remote API to get docker info */
 func (this *DockerregistryapiController) GetInfo() {
-	address := "/_ping"
-	result := RequestRegistry(address, "GET")
+	result := registryPing()
 	this.Ctx.WriteString(result)
 }
 
-type imageInfo struct {
-    Id string
-	ParentId string
-    Name string
-	Tag string
-	Readme string
-	Layers string
-	BuildInfo string
-	Dockerfile string
-	Author string
-	Architecture string
-	Created string
-	Comment string
-	DockerVersion string
-	Os string
-	Size string
-	PirateFile string
-	Tags string
-	Pirate2 map[string]string
-	Layers2 []string
-    Tags2 interface{}
-	
-}
-
-const DOCKERHUB_URL="https://registry.hub.docker.com/u"
-/* Wrap docker remote API to get data of image */
 func (this *DockerregistryapiController) GetImageInfo() {
 	var id, name, tag string
 
@@ -358,8 +405,7 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	fmt.Printf("id:%s,name:%s,tag:%s", id, name, tag)
 	
 	// send message for image
-	address := "/images/" + id + "/json"
-	result := RequestRegistry(address, "GET")
+	result := registryGetId(id)
 	
 	var objmap map[string]json.RawMessage
 	json.Unmarshal([]byte(result), &objmap)
@@ -392,8 +438,8 @@ func (this *DockerregistryapiController) GetImageInfo() {
             break  // found README
         }
         i = i+1 
-        address := "/images/" + id + "/json"
-        result := RequestRegistry(address, "GET")
+		result := registryGetId(id)
+
         i := strings.Index(result,`"parent":`)
         if i==-1 {
             break // to the end
@@ -424,10 +470,10 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	info.Dockerfile = dockerfile
 	info.PirateFile = piratefile
 	
-	tags := getTags(name)
+	tags := registryGetTagsByName(name)
 	info.Tags = tags
 
-	layers := getAncestry(id)
+	layers := registryGetAncestry(id)
 	//fmt.Println("layers:", layers)
 	info.Layers = layers
 	

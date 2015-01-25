@@ -10,7 +10,7 @@ Key Features:
   
   * Lightweight UI for private registry's information like images/configuration
   * Readonly mode to be used anonymous
-  * (TODO) link to internal/external web sites for more detail information for each image
+  * link to internal/external web sites for more detail information for each image
 
 For quick start, checkout the [demo website](http://96.126.127.93:9527/).
 
@@ -32,6 +32,7 @@ So far follow configurations are supported, you can pass via like `-e PIRATE_MOD
 
  * `PIRATE_MODE=readonly|DELETE`   : default is `DELETE`, disable DELETE operation for each image, good for anonymous access
  * `REGISTRY_URL=<registry url>`   : default is `registry:5000`, don't put `http` in front.
+ * `PIRATE_URL_ALIAS`              : default is `registry:5000`, it shall be the registry URL for user to `docker pull`
  
 ## Feature: More docker image information ##
 
