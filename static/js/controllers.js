@@ -136,21 +136,9 @@ seagullControllers.controller('ImageController', ['$scope', '$routeParams', 'doc
                 $scope.txtDockerfile = image.Dockerfile;
                 $scope.txtTag = image.Tags;
                 $scope.txtLayers = image.Layers;
-                image.Tags2 = {
-                    "latest": "9e89cc6f0bc3c38722009fe6857087b486531f9a779a0c17e3ed29dae8f12c4f",
-                    "0.1.1":  "b486531f9a779a0c17e3ed29dae8f12c4f9e89cc6f0bc3c38722009fe6857087"
-                };
-                $scope.tags = mapToList(image.Tags2);
-                image.Layers2 = ["088b4502f51920fbd9b7c503e87c7a2c05aa3adc3d35e79c031fa126b403200f",
-                    "aeee63968d87c7da4a5cf5d2be6bee4e21bc226fd62273d180a49c96c62e4543",
-                    "bfa4c5326bc764280b0863b46a4b20d940bc1897ef9c1dfec060604bdc383280",
-                    "6ab5893c6927c15a15665191f2c6cf751f5056d8b95ceee32e43c5e8a3648544"];
-                $scope.layers = image.Layers2;
-                image.Pirate2 = {
-                    "PACKAGE_VERSION": "0.3",
-                    "ORGANIZATION": "ERIC"
-                };
-                $scope.metadata = mapToList(image.Pirate2);
+                $scope.tags = mapToList(image.Tags);
+                $scope.layers = image.Layers;
+                $scope.metadata = mapToList(image.Pirate);
             });
         });
     }]);

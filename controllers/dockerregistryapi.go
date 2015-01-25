@@ -198,7 +198,7 @@ func getIni(ini string)(map[string]string) {
     return abc
 }
 
-func getReadme(id string)(string,string,string,string,error) {
+func getReadme(id string)(string,string,string,error) {
     layerfile := REGISTRY_PATH + "/" + id + "/layer"
 	
 	cmd := "tar -tf "+ layerfile
@@ -211,27 +211,24 @@ func getReadme(id string)(string,string,string,string,error) {
 	
     dat1, err1 := readFileFromTar(string(out), layerfile,README_MD_FILE)
 	dat2, err2 := readFileFromTar(string(out), layerfile,DOCKERFILE_FILE)
-	dat3, err3 := readFileFromTar(string(out), layerfile,BUILD_LOG_FILE)
-	dat4, err4 := readFileFromTar(string(out), layerfile,PIRATE_INI_FILE)
+	dat3, err3 := readFileFromTar(string(out), layerfile,PIRATE_INI_FILE)
 	
-	if err1 != nil && err2 != nil && err3 != nil && err4 != nil {
-		return "","","","",errors.New("can't find the file")
+	if err1 != nil && err2 != nil && err3 != nil {
+		return "","","",errors.New("can't find the file")
 		
 	} 
-    return string(dat1),string(dat2),string(dat3),string(dat4),nil
+    return string(dat1),string(dat2),string(dat3),nil
 }
 
 /* Wrap docker remote API to get images */
 func (this *DockerregistryapiController) GetImages() {
     // search for all repository
 	result := registryGetAllImages()
-	fmt.Println("result:",result)
+	// fmt.Println("result:",result)
 	
 	var searchResult search
     json.Unmarshal([]byte(result),&searchResult)
-    fmt.Println(searchResult)
-    fmt.Println(searchResult.Results)
-  
+    
     var f interface{}
     images := make([]image,0)
     var oneimage image
@@ -241,14 +238,12 @@ func (this *DockerregistryapiController) GetImages() {
         json.Unmarshal([]byte(tags), &f)
         m := f.(map[string]interface{})
         for k, v := range m {
-          fmt.Println("tag name:",k,",id:",v)
           oneimage.Name =  repo.Name
           oneimage.Tag = k
           oneimage.Id = v.(string)
           images = append(images,oneimage)
         }
     }
-    fmt.Println(images)
     all,_ := json.Marshal(images)
     fmt.Println(string(all))
 	
@@ -322,15 +317,11 @@ type imageInfo struct {
 	DockerVersion, Os, Size string
 
 	Readme string
-	Layers string
-	BuildInfo string
 	Dockerfile string
 
-	PirateFile string
-	Tags string
-	Pirate2 map[string]string
-	Layers2 []string
-    Tags2 interface{}
+	Pirate map[string]string
+	Layers []string
+    Tags map[string]string
 	
 }
 
@@ -354,18 +345,8 @@ func (this *DockerregistryapiController) GetVersion() {
     json.Unmarshal([]byte(result),&pingResult)
 	m := pingResult.Versions.(map[string]interface{})
 
-/*	
-    fmt.Println(pingResult)
-    fmt.Println("Host:",pingResult.Host)
-	fmt.Println("Host:",pingResult.Host[2])
-	fmt.Println("Launch:",pingResult.Launch)
-	fmt.Println("Versions:",pingResult.Versions)
-*/
     // fill the internal data structure
 	var config configuration
-//	config.Host          = pingResult.Host
-//	config.Launch        = pingResult.Launch
-//	config.Versions      = pingResult.Versions
 	config.Os            = pingResult.Host[0]
 	config.GitCommit     = pingResult.Host[1]
 	config.KernelVersion = pingResult.Host[2]	
@@ -421,19 +402,17 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	
     readme := ""
 	dockerfile := ""
-	buildlogfile := ""
 	piratefile := ""
 	
     for i:=0;i<len(ancestries);i++ {      // i is used to control the depth of the layer
 		id = ancestries[i] 
         fmt.Println("i=",i, "Check id: " + id)
-        dat1, dat2,dat3,dat4, err := getReadme(id)
+        dat1, dat2,dat3, err := getReadme(id)
         if err == nil || i > 5  {
             // readme = contents
 			readme = dat1
 			dockerfile = dat2
-			buildlogfile = dat3
-			piratefile= dat4
+			piratefile= dat3
             break  // found README
         }
     }
@@ -446,32 +425,19 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	    url := DOCKERHUB_URL + "/" + name + "/dockerfile"
 	    dockerfile = fmt.Sprintf("Not found in docker image, mostly you want to check %s",url)
 	}
-    
-    if buildlogfile == "" {
-	    buildlogfile ="no build log is attached"
-	}	
 
     info.Readme = readme
 	info.Id = id
 	info.Name = name
 	info.Tag = tag
-	info.BuildInfo = buildlogfile
 	info.Dockerfile = dockerfile
-	info.PirateFile = piratefile
 	
 	tags := registryGetTagsByName(name)
-	info.Tags = tags
-
-	info.Layers = layers
-	
-	// http://play.golang.org/p/6b1buUfE7y
-	var f interface{}
-	json.Unmarshal([]byte(tags), &f)
-    info.Tags2 = f.(map[string]interface{})
-	
-	info.Layers2 = ancestries
-	
-	info.Pirate2 = getIni(piratefile)
+	var nameValue map[string]string
+	json.Unmarshal([]byte(tags), &nameValue)
+    info.Tags = nameValue
+	info.Layers = ancestries
+	info.Pirate = getIni(piratefile)
 	
     all,_ := json.MarshalIndent(info,"","  ")
     fmt.Println(string(all))
