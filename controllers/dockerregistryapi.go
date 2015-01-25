@@ -17,6 +17,7 @@ import (
 	"encoding/json"
 	"os/exec"
 	"regexp"
+	"net/mail"
 )
 
 /* Give address and method to request docker registry API */
@@ -311,9 +312,15 @@ type ping struct {
 	Versions interface{}
 }
 
+type image_basic struct {
+    Parent, Architecture, Created, Author string
+	Os, Docker_version,Size string
+	IgnoreData json.RawMessage 
+}
+
 type imageInfo struct {
     Id,Name,Tag, ParentId string
-	Author, Architecture, Created, Comment string
+	Author, Architecture, Created string
 	DockerVersion, Os, Size string
 
 	Readme string
@@ -323,7 +330,11 @@ type imageInfo struct {
 	Layers []string
     Tags map[string]string
 	
+	Email *mail.Address
+	Image image_basic
 }
+
+
 
 const DOCKERHUB_URL="https://registry.hub.docker.com/u"
 
@@ -381,20 +392,31 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	
 	// send message for image
 	result := registryGetId(id)
+	fmt.Println("result:", result)
 	
 	var objmap map[string]json.RawMessage
 	json.Unmarshal([]byte(result), &objmap)
 
 	var info imageInfo
 
-	info.ParentId = string(objmap["parent"])	
-	info.Architecture = string(objmap["architecture"])	
-	info.Created=string(objmap["created"])
-	info.Author = string(objmap["author"])
-	info.Os = string(objmap["os"])
-	info.Comment = ""
-	info.DockerVersion = string(objmap["docker_version"])
-	info.Size = string(objmap["Size"])
+	var image image_basic
+	json.Unmarshal([]byte(result), &image)
+	info.ParentId = image.Parent	
+	info.Architecture = image.Architecture
+	info.Created=image.Created
+	info.Author = image.Author
+	info.Os = image.Os
+	info.DockerVersion = image.Docker_version
+	info.Size = image.Size
+	
+	info.Image = image
+	
+	address, err := mail.ParseAddress(info.Author)
+	if err != nil {
+	    address = new(mail.Address)
+		address.Name = info.Author
+	} 
+	info.Email = address
 
 	layers := registryGetAncestry(id)
 	var ancestries[]string
