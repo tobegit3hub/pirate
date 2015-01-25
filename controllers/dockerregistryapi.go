@@ -317,21 +317,15 @@ type ping struct {
 }
 
 type imageInfo struct {
-    Id string
-	ParentId string
-    Name string
-	Tag string
+    Id,Name,Tag, ParentId string
+	Author, Architecture, Created, Comment string
+	DockerVersion, Os, Size string
+
 	Readme string
 	Layers string
 	BuildInfo string
 	Dockerfile string
-	Author string
-	Architecture string
-	Created string
-	Comment string
-	DockerVersion string
-	Os string
-	Size string
+
 	PirateFile string
 	Tags string
 	Pirate2 map[string]string
@@ -420,16 +414,21 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	info.Comment = ""
 	info.DockerVersion = string(objmap["docker_version"])
 	info.Size = string(objmap["Size"])
+
+	layers := registryGetAncestry(id)
+	var ancestries[]string
+	json.Unmarshal([]byte(layers), &ancestries)
 	
     readme := ""
 	dockerfile := ""
 	buildlogfile := ""
 	piratefile := ""
-	var parentId []string
-    for i:=0;; {      // i is used to control the depth of the layer
-        fmt.Println("Check id:" + id)
+	
+    for i:=0;i<len(ancestries);i++ {      // i is used to control the depth of the layer
+		id = ancestries[i] 
+        fmt.Println("i=",i, "Check id: " + id)
         dat1, dat2,dat3,dat4, err := getReadme(id)
-        if err == nil || i > 5 {
+        if err == nil || i > 5  {
             // readme = contents
 			readme = dat1
 			dockerfile = dat2
@@ -437,16 +436,6 @@ func (this *DockerregistryapiController) GetImageInfo() {
 			piratefile= dat4
             break  // found README
         }
-        i = i+1 
-		result := registryGetId(id)
-
-        i := strings.Index(result,`"parent":`)
-        if i==-1 {
-            break // to the end
-        }
-        id = result[i+10:i+74] // TODO: hacked solution to get parent
-		parentId = append(parentId, id)
-        //fmt.Println(parentId)
     }
     if readme == "" {
 	    url := DOCKERHUB_URL + "/" + name 
@@ -473,19 +462,14 @@ func (this *DockerregistryapiController) GetImageInfo() {
 	tags := registryGetTagsByName(name)
 	info.Tags = tags
 
-	layers := registryGetAncestry(id)
-	//fmt.Println("layers:", layers)
 	info.Layers = layers
 	
 	// http://play.golang.org/p/6b1buUfE7y
 	var f interface{}
 	json.Unmarshal([]byte(tags), &f)
     info.Tags2 = f.(map[string]interface{})
-
-	var f2 []string
-	json.Unmarshal([]byte(layers), &f2)
 	
-	info.Layers2 = f2
+	info.Layers2 = ancestries
 	
 	info.Pirate2 = getIni(piratefile)
 	
