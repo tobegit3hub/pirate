@@ -8,6 +8,7 @@
                         <img src="static/img/json-logo.png" height="32">
                     </a>
                 </h1>
+
                 <div class="input-group col-md-6">
                     <span class="input-group-addon" id="basic-addon1">Pull Repo</span>
                     <input type="text" class="form-control" aria-describedby="basic-addon1" value="{{pullUrl}}">
@@ -30,28 +31,59 @@
                             </pre>
                         </div>
                     </tab>
-                    <tab heading="BUILDINFO">
-                        <div class="buildinfo">
-                            <pre>
-                                <code><br>{{txtBuildinfo}}</code>
-                            </pre>
+                    <tab heading="TAGS">
+                        <div class="tags">
+                            <table class="table table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>Tag Name</th>
+                                    <th>Tag Id</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="tag in tags">
+                                    <td>
+                                        <a ng-href="/images/info?id={{tag.Value}}&name={{image.Name}}&tag={{tag.Name}}">
+                                            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> {{tag.Name}}
+                                        </a>
+                                    </td>
+                                    <td><a ng-href="/dockerregistryapi/images/{{tag.Value}}/json" target="_blank">{{tag.Value
+                                        | limitTo:12}}</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </tab>
-                    <tab heading="TAG">
-					    <div class="buildinfo">
-                            <pre>
-                                <code><br>{{tags}}</code>
-                            </pre>
-                        </div>
-					</tab>
                     <tab heading="LAYERS">
-					    <div class="buildinfo">
-                            <pre>
-                                <code><br>{{layers}}</br></code>
-                            </pre>
-                        </div>					
-					</tab>
-					
+                        <div class="layers">
+                            <div class="timeline row">
+                                <div class="timeline-icon"><i class="glyphicon glyphicon-chevron-up"></i></div>
+                                <div ng-repeat="layerId in layers" class="timeline-item-label clearfix">
+                                    <a ng-href="/dockerregistryapi/images/{{image.Id}}/json" target="_blank">
+                                        <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> {{layerId | limitTo:12}}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                    <tab heading="METADATA">
+                        <div class="metadata">
+                            <table class="table table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in metadata">
+                                    <td>{{item.Name}}</td>
+                                    <td>{{item.Value}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </tab>
                 </tabset>
             </div>
             <!-- main end -->
@@ -63,13 +95,31 @@
                         <h3 class="panel-title">Properties</h3>
                     </div>
                     <ul class="list-group">
-                        <li class="list-group-item" tooltip="ID"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> {{image.Id | limitTo:12}}</li>
-                        <li class="list-group-item" tooltip="Author"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{image.Author}}</li>
-                        <li class="list-group-item" tooltip="Created"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{image.Created | date:'yyyy-MM-dd HH:mm:ss'}}</li>
-                        <li class="list-group-item" tooltip="Architecture"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {{image.Architecture}}</li>
-                        <li class="list-group-item" tooltip="DockerVersion"><span class="glyphicon glyphicon-compressed" aria-hidden="true"></span> {{image.DockerVersion}}</li>
-                        <li class="list-group-item" tooltip="Os"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> {{image.Os}}</li>
-                        <li class="list-group-item" tooltip="Size"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> {{image.Size}}</li>
+                        <li class="list-group-item" tooltip="ID"><span class="glyphicon glyphicon-inbox"
+                                                                       aria-hidden="true"></span> {{image.Id |
+                            limitTo:12}}
+                        </li>
+                        <li class="list-group-item" tooltip="Author"><span class="glyphicon glyphicon-user"
+                                                                           aria-hidden="true"></span> {{image.Author}}
+                        </li>
+                        <li class="list-group-item" tooltip="Created"><span class="glyphicon glyphicon-time"
+                                                                            aria-hidden="true"></span> {{image.Created |
+                            date:'yyyy-MM-dd HH:mm:ss'}}
+                        </li>
+                        <li class="list-group-item" tooltip="Architecture"><span class="glyphicon glyphicon-cog"
+                                                                                 aria-hidden="true"></span>
+                            {{image.Architecture}}
+                        </li>
+                        <li class="list-group-item" tooltip="DockerVersion"><span class="glyphicon glyphicon-compressed"
+                                                                                  aria-hidden="true"></span>
+                            {{image.DockerVersion}}
+                        </li>
+                        <li class="list-group-item" tooltip="Os"><span class="glyphicon glyphicon-th-large"
+                                                                       aria-hidden="true"></span> {{image.Os}}
+                        </li>
+                        <li class="list-group-item" tooltip="Size"><span class="glyphicon glyphicon-file"
+                                                                         aria-hidden="true"></span> {{image.Size}}
+                        </li>
                     </ul>
                 </div>
             </aside>

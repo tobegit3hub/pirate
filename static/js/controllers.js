@@ -113,20 +113,44 @@ seagullControllers.controller('ModalController', [
  */
 seagullControllers.controller('ImageController', ['$scope', '$routeParams', 'dockerService',
     function ($scope, $routeParams, dockerService) {
+
+        function mapToList(map){
+            var list = [];
+            for (var name in map) {
+                list.push({
+                    Name: name,
+                    Value: map[name]
+                });
+            }
+            return list;
+        }
+
         dockerService.getVersion().then(function (version) {
             $scope.version = version;
-            dockerService.getImageInfo($routeParams.id,$routeParams.name,$routeParams.tag).then(function (image) {
-                var createTime = Date.parse(image.Created.replace(/"/g,''));
+            dockerService.getImageInfo($routeParams.id, $routeParams.name, $routeParams.tag).then(function (image) {
+                var createTime = Date.parse(image.Created.replace(/"/g, ''));
                 image.Created = createTime;
                 $scope.image = image;
                 $scope.pullUrl = "docker pull " + $scope.version.PirateUrlAlias + "/" + image.Name + ":" + image.Tag;
                 $scope.mdInfo = image.Readme;
                 $scope.txtDockerfile = image.Dockerfile;
-                $scope.txtBuildinfo = image.Pirate2;
-				$scope.txtTag       = image.Tags;
-				$scope.txtLayers    = image.Layers;
-				$scope.tags         = image.Tags2;
-				$scope.layers       = image.Layers2;
+                $scope.txtTag = image.Tags;
+                $scope.txtLayers = image.Layers;
+                image.Tags2 = {
+                    "latest": "9e89cc6f0bc3c38722009fe6857087b486531f9a779a0c17e3ed29dae8f12c4f",
+                    "0.1.1":  "b486531f9a779a0c17e3ed29dae8f12c4f9e89cc6f0bc3c38722009fe6857087"
+                };
+                $scope.tags = mapToList(image.Tags2);
+                image.Layers2 = ["088b4502f51920fbd9b7c503e87c7a2c05aa3adc3d35e79c031fa126b403200f",
+                    "aeee63968d87c7da4a5cf5d2be6bee4e21bc226fd62273d180a49c96c62e4543",
+                    "bfa4c5326bc764280b0863b46a4b20d940bc1897ef9c1dfec060604bdc383280",
+                    "6ab5893c6927c15a15665191f2c6cf751f5056d8b95ceee32e43c5e8a3648544"];
+                $scope.layers = image.Layers2;
+                image.Pirate2 = {
+                    "PACKAGE_VERSION": "0.3",
+                    "ORGANIZATION": "ERIC"
+                };
+                $scope.metadata = mapToList(image.Pirate2);
             });
         });
     }]);
@@ -142,49 +166,5 @@ seagullControllers.controller('ConfigurationController', ['$scope', '$routeParam
         dockerService.getInfo().then(function (info) {
             $scope.info = info;
         });
-
-    }]);
-
-/* Dockerhub controller requests beego API server to get search images */
-seagullControllers.controller('DockerhubController', ['$scope', '$routeParams', 'dockerService',
-    function ($scope, $routeParams, dockerService) {
-
-        /* Display the loading icon before get search images */
-        $scope.isSearching = true;
-
-        /* Request beego API server to get search images, default is seagull */
-        dockerService.searchImages('seagull').then(function (images) {
-            $scope.isSearching = false;
-            $scope.images = images;
-        });
-
-        /* Request beego API server to get search images */
-        $scope.getSearchImages = function (term) {
-            $scope.isSearching = true;
-
-            dockerService.searchImages(term).then(function (images) {
-                $scope.isSearching = false;
-                $scope.images = images;
-                alert_success("Search images of " + term);
-            }, function (reason) {
-                $scope.isSearching = false;
-                alert_error("Search images of " + term);
-            });
-        };
-
-        /* Generate the image link by judging it's official images or not */
-        $scope.getImageLink = function (name) {
-            var address;
-
-            if (name.indexOf('/') === -1) {
-                // Example: https://registry.hub.docker.com/_/golang
-                address = "https://registry.hub.docker.com/_/" + name;
-            } else {
-                // Example: https://registry.hub.docker.com/u/tobegit3hub/seagull
-                address = "https://registry.hub.docker.com/u/" + name;
-            }
-
-            return address;
-        };
 
     }]);
