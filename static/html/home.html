@@ -2,19 +2,23 @@
 <!-- The home page -->
 <div ng-controller="HomeController">
 
-  <!-- Alert if we get nothing from server -->
+  <!-- Deprecated: Alert if we get nothing from server
   <div ng-show="!version || !info" class="alert alert-danger" role="alert">Error to load data from docker daemon. Please check seagull and configuration.</div>
+  -->
 
   <!-- Display a bootstrap-style jumbotron to display the basic info of docker -->
   <div class="jumbotron">
     <!-- Example: Seagull the best friend of docker -->
-    <h1>Pirate <small>the best friend of docker registry</small></h1>
+    <h1>Pirate <small>the admin dashboard for docker distribution</small></h1>
 
     <!-- Example: I'm using linux with kernel 3.11.0-12-generic, go1.2.1 and Docker 1.1.2. The docker daemon has 26 running/stopped containers and 359 images now. Docker is an open platform for distributed application for developers and sysadmins. And seagull provides a friendly Web UI to monitor docker. -->
-    <h3>
+    <!-- Deprecated: this is just for seagull but not pirate
+      <h3>
         I'm using <i>{{Os}}</i> with kernel <i>{{KernelVersion}}</i>, and Docker registry <i>{{Version}}</i>.
         Docker Registry server is for hosting/delivering of docker repositories and images,and pirate provides a friendly Web UI to monitor docker registry.
     </h3>
+    -->
+      <h3>More detail in <a href="https://github.com/tobegit3hub/pirate">https://github.com/tobegit3hub/pirate</a></h3>
   </div>
 
   <!-- Display four section with text and image of containers page, images page, configuration page and github page -->
