@@ -6,7 +6,7 @@ seagullServices.service('dockerService', ['$http', '$q',
         var baseURL = '/dockerapi/';
         var getVersionURI = baseURL + 'version';
         var getInfoURI = baseURL + 'info';
-        var getImagesURI = baseURL + 'images';
+        var getImagesURI = baseURL + "images";
         var getImageBaseURI = baseURL + 'images/';
         var searchImagesURI = baseURL + 'images/search';
 
@@ -46,6 +46,17 @@ seagullServices.service('dockerService', ['$http', '$q',
             return getDataForURI(getImagesURI);
         }
 
+        function getImageTags(user, image) {
+            url = "/dockerapi/" + user + "/" + image + "/tags/list"
+            return getDataForURI(url)
+        }
+
+        function getLibraryImageTags(image) {
+            //return getDataForURI(getImagesURI)
+            url = "/dockerapi/" + image + "/tags/list"
+            return getDataForURI(url)
+        }
+
         function getImageById(id) {
             return getDataForURI(getImageBaseURI + id + '/json');
         }
@@ -73,6 +84,8 @@ seagullServices.service('dockerService', ['$http', '$q',
             getVersion: getVersion,
             getInfo: getInfo,
             getImages: getImages,
+            getImageTags: getImageTags,
+            getLibraryImageTags: getLibraryImageTags,
             getImageById: getImageById,
             getImageByUserAndRepo: getImageByUserAndRepo,
             getImageInfo: getImageInfo,

@@ -303,7 +303,6 @@ func (this *DockerregistryapiController) GetImagesV1() {
 /* Get images */
 func (this *DockerregistryapiController) GetImages() {
 
-	fmt.Println("it works")
 	address := "/_catalog"
 
 	result := RequestDistribution(address, "GET")
@@ -312,9 +311,33 @@ func (this *DockerregistryapiController) GetImages() {
 
 }
 
+/* Get tags of the image */
+func (this *DockerregistryapiController) GetImageTags() {
+	user := this.GetString(":user")
+	image := this.GetString(":image")
+
+	// Example: /archci/archci/tags/list
+	address := "/" + user + "/" + image + "/tags/list"
+
+	result := RequestDistribution(address, "GET")
+
+	this.Ctx.WriteString(string(result))
+}
+
+/* Get tags of the library image */
+func (this *DockerregistryapiController) GetLibraryImageTags() {
+	image := this.GetString(":image")
+
+	// Example: /golang/tags/list
+	address := "/" + image + "/tags/list"
+
+	result := RequestDistribution(address, "GET")
+
+	this.Ctx.WriteString(string(result))
+}
 
 
-/* Wrap docker remote API to get data of image */
+/* Deprecated: Wrap docker remote API to get data of image */
 func (this *DockerregistryapiController) GetImage() {
 	id := this.GetString(":id")
 	result := registryGetId(id)

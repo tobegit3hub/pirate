@@ -52,15 +52,23 @@ seagullControllers.controller('HomeController', ['$scope', '$routeParams', 'dock
 seagullControllers.controller('ImagesController', ['$scope', '$routeParams', '$http', 'dockerService', '$modal',
     function ($scope, $routeParams, $http, dockerService, $modal) {
 
-        // {"repositories":["archci/archci","archci/docs","golang"]}
-
-        console.log("get images")
-
-        console.log(dockerService.getImages());
-
+        // Example: {"repositories":["archci/archci","archci/docs","golang"]}
         dockerService.getImages().then(function (data) {
             $scope.images = data.repositories;
-            console.log($scope.images);
+            //console.log($scope.images);
+
+            $scope.imageList = [];
+            $scope.images.forEach(function(image) {
+                // Example: {"name":"archci/archci","tags":["1.0","latest"]}
+                dockerService.getLibraryImageTags(image).then(function(data) {
+                    //console.log(data)
+                    $scope.imageList.push(data)
+                });
+
+            });
+
+            //return $scope.imageList;
+
         });
 
         /*

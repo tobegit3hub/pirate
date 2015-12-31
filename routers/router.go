@@ -17,6 +17,10 @@ func init() {
 
 	/* HTTP API for docker remote API */
 	beego.Router("/dockerapi/images", &controllers.DockerregistryapiController{}, "get:GetImages")
+	// Example: http://127.0.0.1:5000/v2/archci/archci/tags/list
+	beego.Router("/dockerapi/:user/:image/tags/list", &controllers.DockerregistryapiController{}, "get:GetImageTags")
+	beego.Router("/dockerapi/:image/tags/list", &controllers.DockerregistryapiController{}, "get:GetLibraryImageTags")
+
 	beego.Router("/dockerregistryapi/images/:id/json", &controllers.DockerregistryapiController{}, "get:GetImage")
 	beego.Router("/dockerregistryapi/images/info", &controllers.DockerregistryapiController{}, "get:GetImageInfo")
 	beego.Router("/dockerregistryapi/images/:user/:repo/json", &controllers.DockerregistryapiController{}, "get:GetUserImage")
