@@ -27,7 +27,8 @@ var seagullControllers = angular.module('seagullControllers', []);
 seagullControllers.controller('HomeController', ['$scope', '$routeParams', 'dockerService',
     function ($scope, $routeParams, dockerService) {
 
-        /* Get the version object */
+
+        /* Get the version object
         dockerService.getVersion().then(function (version) {
             $scope.version = version;
             $scope.Os = version.Os;
@@ -35,19 +36,34 @@ seagullControllers.controller('HomeController', ['$scope', '$routeParams', 'dock
             $scope.GoVersion = version.GoVersion;
             $scope.Version = version.Version;
         });
+        */
 
-        /* Get the info object */
+        /* Get the info object
         dockerService.getInfo().then(function (info) {
             $scope.info = info;
             $scope.Containers = info.Containers;
             $scope.Images = info.Images;
         });
+        */
+
     }]);
 
 /* Images controller requests beego API server to get/delete images */
 seagullControllers.controller('ImagesController', ['$scope', '$routeParams', '$http', 'dockerService', '$modal',
     function ($scope, $routeParams, $http, dockerService, $modal) {
 
+        // {"repositories":["archci/archci","archci/docs","golang"]}
+
+        console.log("get images")
+
+        console.log(dockerService.getImages());
+
+        dockerService.getImages().then(function (data) {
+            $scope.images = data.repositories;
+            console.log($scope.images);
+        });
+
+        /*
         dockerService.getVersion().then(function (version) {
             $scope.version = version;
             dockerService.getImages().then(function (images) {
@@ -92,6 +108,9 @@ seagullControllers.controller('ImagesController', ['$scope', '$routeParams', '$h
             }
             return true;
         }
+        */
+
+
     }]);
 
 /*

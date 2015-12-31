@@ -23,18 +23,23 @@
     <thead>
       <tr>
         <th>Name</th>
+        <!--
         <th><a href="" ng-click="predicate='RepoTags'; reverse=!reverse">RepoTags</a></th>
 		<th><a href="" ng-click="predicate='Id'; reverse=!reverse">Id</a></th>
         <th>Operation</th>
+        -->
       </tr>
     </thead>
 
     <tbody>
       <tr ng-repeat="image in images | filter: search track by $index">
+        <!--
         <td><a ng-href="/images/info?id={{image.Id}}&name={{image.Name}}&tag={{image.Tag}}">{{image.Name}}</a></td>
         <td><a ng-href="/images/{{image.Id}}">{{image.Tag}}</a></td> 
-        <th><a ng-href="/images/{{image.Id}}">{{image.Id | limitTo:12}}</a></th> <!-- Shorten image id -->		
+        <th><a ng-href="/images/{{image.Id}}">{{image.Id | limitTo:12}}</a></th>
         <td><button class="btn btn-primary" ng-click="pullImage(image)">Pull Image</button>&nbsp;<button ng-hide="isReadonly()" class="btn btn-danger" ng-click="deleteImage(image)">Delete</button></td>
+        -->
+        <td>{{image}}</td>
       </tr>
     </tbody>	
   </table>

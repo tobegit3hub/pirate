@@ -20,9 +20,9 @@ import (
 	"net/mail"
 )
 
-/* Give address and method to request docker registry API */
+/* Deprecated: Give address and method to request docker registry API */
 func RequestRegistry(address, method string) string {
-	REGISTRY_URL := "registry:5000"
+	REGISTRY_URL := "127.0.0.1:5000"
 	if os.Getenv("REGISTRY_URL") != "" {
 	   REGISTRY_URL = os.Getenv("REGISTRY_URL")
 	} else {
@@ -32,6 +32,54 @@ func RequestRegistry(address, method string) string {
     // fmt.Println(os.Environ())
 	registry_url := "http://" + REGISTRY_URL + "/v1" + address
     //fmt.Println(registry_url)
+
+	reader := strings.NewReader("")
+
+	request, err := http.NewRequest(method, registry_url, reader)
+	if err != nil {
+		fmt.Println("Error to create http request", err)
+		return ""
+	}
+
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println("Error to achieve http request over unix socket", err)
+		return ""
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		fmt.Println("Error, get invalid body in answer")
+		return ""
+	}
+	//fmt.Println(body)
+
+	/* An example to get continual stream from events, but it's for stdout
+		_, err = io.Copy(os.Stdout, res.Body)
+		if err != nil && err != io.EOF {
+			fmt.Println("Error, get invalid body in answer")
+			return ""
+	   }
+	*/
+
+	defer response.Body.Close()
+	// fmt.Println("http result body:",string(body))
+	return string(body)
+}
+
+/* Give address and method to request docker registry API */
+func RequestDistribution(address, method string) string {
+	REGISTRY_URL := "127.0.0.1:5000"
+	if os.Getenv("REGISTRY_URL") != "" {
+		REGISTRY_URL = os.Getenv("REGISTRY_URL")
+	} else {
+		// set varible to be used in configuration
+		os.Setenv("REGISTRY_URL", REGISTRY_URL)
+	}
+	// fmt.Println(os.Environ())
+	registry_url := "http://" + REGISTRY_URL + "/v2" + address
+	//fmt.Println(registry_url)
 
 	reader := strings.NewReader("")
 
@@ -127,7 +175,8 @@ func registryGetAllImages() string {
 	address := "/search"	
 	result := RequestRegistry(address, "GET")
 	return result
-}	
+}
+
 
 /*
  * structure
@@ -221,8 +270,8 @@ func getReadme(id string)(string,string,string,error) {
     return string(dat1),string(dat2),string(dat3),nil
 }
 
-/* Wrap docker remote API to get images */
-func (this *DockerregistryapiController) GetImages() {
+/* Deprecated: Wrap docker remote API to get images */
+func (this *DockerregistryapiController) GetImagesV1() {
     // search for all repository
 	result := registryGetAllImages()
 	// fmt.Println("result:",result)
@@ -250,6 +299,20 @@ func (this *DockerregistryapiController) GetImages() {
 	
 	this.Ctx.WriteString(string(all))
 }
+
+/* Get images */
+func (this *DockerregistryapiController) GetImages() {
+
+	fmt.Println("it works")
+	address := "/_catalog"
+
+	result := RequestDistribution(address, "GET")
+
+	this.Ctx.WriteString(string(result))
+
+}
+
+
 
 /* Wrap docker remote API to get data of image */
 func (this *DockerregistryapiController) GetImage() {

@@ -3,10 +3,10 @@ var seagullServices = angular.module('seagullServices', []);
 /* Docker service requests beego API server */
 seagullServices.service('dockerService', ['$http', '$q',
     function ($http, $q) {
-        var baseURL = '/dockerregistryapi/';
+        var baseURL = '/dockerapi/';
         var getVersionURI = baseURL + 'version';
         var getInfoURI = baseURL + 'info';
-        var getImagesURI = baseURL + 'images/json';
+        var getImagesURI = baseURL + 'images';
         var getImageBaseURI = baseURL + 'images/';
         var searchImagesURI = baseURL + 'images/search';
 
